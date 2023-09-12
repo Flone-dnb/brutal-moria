@@ -508,7 +508,7 @@ void printCharacterStatsBlock() {
     printHeaderNumber("MANA", py.misc.current_mana, Coord_t{15, STAT_COLUMN}, currentManaColor());
     printHeaderNumberPair("HP  ", py.misc.current_hp, py.misc.max_hp, Coord_t{16, STAT_COLUMN}, currentHitPointsColor());
     printHeaderNumber("AC  ", py.misc.display_ac, Coord_t{19, STAT_COLUMN}, Color_Title);
-    printHeaderLongNumber("GOLD", py.misc.au, Coord_t{20, STAT_COLUMN}, Color_Title);
+    printHeaderLongNumber("GOLD", py.misc.au, Coord_t{20, STAT_COLUMN}, Color_Gold);
     printCharacterWinner();
 
     uint32_t status = py.flags.status;

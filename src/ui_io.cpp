@@ -163,7 +163,7 @@ int randint(int max) {
 
 // Set color. For special effects, returns the color that was actually used so that we can clear it -ATW-
 int setColor(int color) {
-    if (color == -1 || ! config::options::use_colors) {
+    if (color == -1 || !config::options::use_colors) {
         return -1;
     }
 
@@ -204,7 +204,7 @@ void putString(const char *out_str, Coord_t coord, int color) {
     }
 
     vtype_t str = {'\0'};
-    (void) strncpy(str, out_str, (size_t)(79 - coord.x));
+    (void) strncpy(str, out_str, (size_t) (79 - coord.x));
     str[79 - coord.x] = '\0';
 
     color = setColor(color);
@@ -325,7 +325,7 @@ void printMessage(const char *msg) {
                 old_len = 73;
             }
 
-            putString(" -more-", Coord_t{MSG_LINE, old_len});
+            putString(" -more-", Coord_t{MSG_LINE, old_len}, Color_Attention);
 
             char key;
             do {

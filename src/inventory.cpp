@@ -214,7 +214,7 @@ bool inventoryCanCarryItemCount(Inventory_t const &item) {
         return true;
     }
 
-    if (!inventoryItemStackable(item) ) {
+    if (!inventoryItemStackable(item)) {
         return false;
     }
 
@@ -467,7 +467,7 @@ int itemColor(Inventory_t *item, bool know_all) {
 
     /* return mid grey if its known empty */
     /* (not sure about this one)          */
-    if (item->identification & config::identification::ID_EMPTY) { 
+    if (item->identification & config::identification::ID_EMPTY) {
         return Color_Empty;
     }
 
@@ -516,6 +516,22 @@ int itemColor(Inventory_t *item, bool know_all) {
     */
     if (item->to_hit > 0 || item->to_damage > 0 || item->to_ac > 0) {
         return Color_Inventory_Enchanted;
+    }
+
+    if (type == TV_FOOD) {
+        return Color_Inventory_Food;
+    }
+
+    if (type == TV_LIGHT) {
+        return Color_Inventory_Light;
+    }
+
+    if (type == TV_SOFT_ARMOR) {
+        return Color_Inventory_Light_Armour;
+    }
+
+    if (type == TV_HARD_ARMOR || TV_SWORD) {
+        return Color_Inventory_Hard_Armour;
     }
 
     return Color_Inventory_Misc;

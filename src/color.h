@@ -244,20 +244,22 @@ typedef struct {
 #define Color_Magik Color_Green
 #define Color_Empty Color_Dark_Grey_High
 
-#define Color_Inventory_Book Color_Old_Parchment
-#define Color_Inventory_Food Color_Food
-#define Color_Inventory_Potion Color_Light_Blue
-#define Color_Inventory_Scroll Color_Paper
-#define Color_Inventory_Wand Color_Iron
-#define Color_Inventory_Staff Color_Wooden
-#define Color_Inventory_Ring Color_Gold
+#define Color_Inventory_Book Color_Puce
+#define Color_Inventory_Food Color_Light_Orange
+#define Color_Inventory_Potion Color_Light_Purple
+#define Color_Inventory_Scroll Color_Agate
+#define Color_Inventory_Wand Color_Rosewood
+#define Color_Inventory_Staff Color_Umber
+#define Color_Inventory_Ring Color_Furry
 #define Color_Inventory_Amulet Color_Cream
-#define Color_Inventory_Armour Color_Iron
+#define Color_Inventory_Light Color_Light_Yellow
+#define Color_Inventory_Hard_Armour Color_Light_Blue
+#define Color_Inventory_Light_Armour Color_Light_Brown
 #define Color_Inventory_Weapon Color_Steel
-#define Color_Inventory_Misc Color_Light_Grey_High
+#define Color_Inventory_Misc Color_White
 #define Color_Inventory_Enchanted Color_Green // White
 
-#define Color_Wall Color_Medium_Grey_High
+#define Color_Wall Color_Light_Orange
 #define Color_Floor Color_Medium_Grey_High
 
 #define Color_Default Color_White
