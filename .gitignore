@@ -1,4 +1,5 @@
 .idea
+CMakeLists.txt.user
 
 # CMake
 Makefile
@@ -72,6 +73,9 @@ dkms.conf
 umoria.xcodeproj
 nbproject
 umoria
+build
+
+*.autosave
 
 compile_commands.json
 *.gz
