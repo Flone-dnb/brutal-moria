@@ -183,8 +183,9 @@ static void printHeaderLongNumber(const char *header, int32_t num, Coord_t coord
     putString(str, coord);
 
     int size = 0;
-    while (header[size] != '\0') size++;
-    Coord_t num_coord{ coord.y, coord.x + size + 2 };
+    while (header[size] != '\0')
+        size++;
+    Coord_t num_coord{coord.y, coord.x + size + 2};
     vtype_t num_str = {'\0'};
     (void) snprintf(num_str, 80, "%6d", num);
     putString(num_str, num_coord, color);
@@ -197,8 +198,9 @@ static void printHeaderLongNumber7Spaces(const char *header, int32_t num, Coord_
     putString(str, coord);
 
     int size = 0;
-    while (header[size] != '\0') size++;
-    Coord_t num_coord{ coord.y, coord.x + size + 2 };
+    while (header[size] != '\0')
+        size++;
+    Coord_t num_coord{coord.y, coord.x + size + 2};
     vtype_t num_str = {'\0'};
     (void) snprintf(num_str, 80, "%7d", num);
     putString(num_str, num_coord, color);
@@ -211,11 +213,40 @@ static void printHeaderNumber(const char *header, int num, Coord_t coord, int co
     putString(str, coord);
 
     int size = 0;
-    while (header[size] != '\0') size++;
-    Coord_t num_coord{ coord.y, coord.x + size + 2 };
+    while (header[size] != '\0')
+        size++;
+    Coord_t num_coord{coord.y, coord.x + size + 2};
     vtype_t num_str = {'\0'};
     (void) snprintf(num_str, 80, "%6d", num);
     putString(num_str, num_coord, color);
+}
+
+// Print header and 2 numbers at given row, column -RAK-
+static void printHeaderNumberPair(const char *header, int num1, int num2, Coord_t coord, int color = -1) {
+    vtype_t str = {'\0'};
+    (void) snprintf(str, 80, "%s: ", header);
+    putString(str, coord);
+
+    vtype_t nums_str = {'\0'};
+    (void) snprintf(nums_str, 80, "%d/%d", num1, num2);
+
+    int size = 0;
+    while (header[size] != '\0')
+        size++;
+    Coord_t num_coord{coord.y, coord.x + size + 2};
+    vtype_t num_str = {'\0'};
+    (void) snprintf(num_str, 80, "%6s", nums_str);
+    putString(num_str, num_coord, color);
+}
+
+// Print 2 numbers at given row, column -RAK-
+static void printNumberPair(int num1, int num2, Coord_t coord, int color = -1) {
+    vtype_t nums_str = {'\0'};
+    (void) snprintf(nums_str, 80, "%d/%d", num1, num2);
+
+    vtype_t str = {'\0'};
+    (void) snprintf(str, 80, "%6s", nums_str);
+    putString(str, coord, color);
 }
 
 // Print long number at given row, column
@@ -257,14 +288,9 @@ void printCharacterCurrentMana() {
     printNumber(py.misc.current_mana, Coord_t{15, STAT_COLUMN + 6}, currentManaColor());
 }
 
-// Prints Max hit points -RAK-
-void printCharacterMaxHitPoints() {
-    printNumber(py.misc.max_hp, Coord_t{16, STAT_COLUMN + 6}, Color_Title);
-}
-
 // Color for current hit points -ATW-
 int currentHitPointsColor() {
-    if (py.misc.current_hp <= py.misc.max_hp / 5) {
+    if (py.misc.current_hp <= py.misc.max_hp / 3) {
         return Color_Warning;
     } else if (py.misc.current_hp < py.misc.max_hp) {
         return Color_Attention;
@@ -272,9 +298,14 @@ int currentHitPointsColor() {
     return Color_OK;
 }
 
+// Prints Max hit points -RAK-
+void printCharacterMaxHitPoints() {
+    printNumberPair(py.misc.current_hp, py.misc.max_hp, Coord_t{16, STAT_COLUMN + 6}, currentHitPointsColor());
+}
+
 // Prints players current hit points -RAK-
 void printCharacterCurrentHitPoints() {
-    printNumber(py.misc.current_hp, Coord_t{17, STAT_COLUMN + 6}, currentHitPointsColor());
+    printNumberPair(py.misc.current_hp, py.misc.max_hp, Coord_t{16, STAT_COLUMN + 6}, currentHitPointsColor());
 }
 
 // Color for current experience -ATW-
@@ -475,8 +506,7 @@ void printCharacterStatsBlock() {
     printHeaderNumber("LEV ", (int) py.misc.level, Coord_t{13, STAT_COLUMN}, Color_Title);
     printHeaderLongNumber("EXP ", py.misc.exp, Coord_t{14, STAT_COLUMN}, currentExperienceColor());
     printHeaderNumber("MANA", py.misc.current_mana, Coord_t{15, STAT_COLUMN}, currentManaColor());
-    printHeaderNumber("MHP ", py.misc.max_hp, Coord_t{16, STAT_COLUMN}, Color_Title);
-    printHeaderNumber("CHP ", py.misc.current_hp, Coord_t{17, STAT_COLUMN}, currentHitPointsColor());
+    printHeaderNumberPair("HP  ", py.misc.current_hp, py.misc.max_hp, Coord_t{16, STAT_COLUMN}, currentHitPointsColor());
     printHeaderNumber("AC  ", py.misc.display_ac, Coord_t{19, STAT_COLUMN}, Color_Title);
     printHeaderLongNumber("GOLD", py.misc.au, Coord_t{20, STAT_COLUMN}, Color_Title);
     printCharacterWinner();
@@ -508,7 +538,7 @@ void printCharacterStatsBlock() {
     }
 
     // if speed non zero, print it, modify speed if Searching
-    int16_t speed = py.flags.speed - (int16_t)((status & config::player::status::PY_SEARCH) >> 8);
+    int16_t speed = py.flags.speed - (int16_t) ((status & config::player::status::PY_SEARCH) >> 8);
     if (speed != 0) {
         printCharacterSpeed();
     }
@@ -630,7 +660,7 @@ void printCharacterLevelExperience() {
     if (py.misc.level >= PLAYER_MAX_LEVEL) {
         putStringClearToEOL("Exp to Adv.: *******", Coord_t{12, 28});
     } else {
-        printHeaderLongNumber7Spaces("Exp to Adv.", (int32_t)(py.base_exp_levels[py.misc.level - 1] * py.misc.experience_factor / 100), Coord_t{12, 28}, Color_Title);
+        printHeaderLongNumber7Spaces("Exp to Adv.", (int32_t) (py.base_exp_levels[py.misc.level - 1] * py.misc.experience_factor / 100), Coord_t{12, 28}, Color_Title);
     }
 
     printHeaderLongNumber7Spaces("Gold       ", py.misc.au, Coord_t{13, 28}, Color_Title);
@@ -805,7 +835,7 @@ void displaySpellsList(const int *spell_ids, int number_of_choices, bool comment
 
         vtype_t out_val = {'\0'};
         (void) snprintf(out_val, 80, "  %c) %-30s%2d %4d %3d%%%s", spell_char, spell_names[spell_id + consecutive_offset], spell.level_required, spell.mana_required,
-                       spellChanceOfSuccess(spell_id), p);
+                        spellChanceOfSuccess(spell_id), p);
         putStringClearToEOL(out_val, Coord_t{2 + i, col});
     }
 }
