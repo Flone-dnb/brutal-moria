@@ -1,3 +1,9 @@
+# Fork info
+
+This fork brings the following changes:
+- Make visuals more colorful.
+- HP is now displayed in one row as "CURRENT / MAX" instead of having 2 rows.
+
 # Umoria COLOR
 
 _The Dungeons of Moria_ is a single player dungeon simulation originally
