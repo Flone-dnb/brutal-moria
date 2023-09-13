@@ -259,6 +259,9 @@ typedef struct {
 #define Color_Inventory_Misc Color_White
 #define Color_Inventory_Enchanted Color_Green // White
 
+#define Color_StaircaseUp Color_Green
+#define Color_StaircaseDown Color_Red
+
 #define Color_Wall Color_Light_Orange
 #define Color_Floor Color_Medium_Grey_High
 #define Color_Floor_Permanent_Lit Color_Brass
