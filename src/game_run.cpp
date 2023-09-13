@@ -91,7 +91,7 @@ void startMoria(int seed, bool start_new_game) {
 
         initializeCharacterInventory();
         py.flags.food = 7500;
-        py.flags.food_digested = 2;
+        py.flags.food_digested = 8;
 
         // Spell and Mana based on class: Mage or Clerical realm.
         if (classes[py.misc.class_id].class_to_use_mage_spells == config::spells::SPELL_TYPE_MAGE) {
