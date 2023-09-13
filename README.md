@@ -5,6 +5,8 @@ This fork brings the following changes:
 - HP is now displayed in one row as "CURRENT / MAX" instead of having 2 rows.
 - Your inventory/equipment/gold weight now affects how fast you starve.
 - All prices are 50% higher compared to original.
+- "Wooden Torch" now burns out after 1250 turns (4000 in original).
+- "Brass Lantern" now burns out after 3000 turns (7500 in original).
 
 # Umoria COLOR
 

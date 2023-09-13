@@ -148,8 +148,8 @@ DungeonObject_t game_objects[MAX_OBJECTS_IN_GAME] = {
     {"& Rounded Pebble~",               0x00000000L, TV_SLING_AMMO,  '{', 0,    1,    193, 1, 4,    0,  0, 0,   0, {1, 2}, 0, Color_Stone}, // 82
     {"& Iron Shot~",                    0x00000000L, TV_SLING_AMMO,  '{', 0,    2,    194, 1, 5,    0,  0, 0,   0, {1, 3}, 3, Color_Iron}, // 83
     {"& Iron Spike~",                   0x00000000L, TV_SPIKE,       '~', 0,    1,    193, 1, 10,   0,  0, 0,   0, {1, 1}, 1, Color_Iron}, // 84
-    {"& Brass Lantern~",                0x00000000L, TV_LIGHT,       '~', 7500, 35,   1,   1, 50,   0,  0, 0,   0, {1, 1}, 1, Color_Brass}, // 85
-    {"& Wooden Torch~",                 0x00000000L, TV_LIGHT,       '~', 4000, 2,    193, 1, 30,   0,  0, 0,   0, {1, 1}, 1, Color_Wooden}, // 86
+    {"& Brass Lantern~",                0x00000000L, TV_LIGHT,       '~', 3000, 35,   1,   1, 50,   0,  0, 0,   0, {1, 1}, 1, Color_Brass}, // 85
+    {"& Wooden Torch~",                 0x00000000L, TV_LIGHT,       '~', 1250, 2,    193, 1, 30,   0,  0, 0,   0, {1, 1}, 1, Color_Wooden}, // 86
     {"& Orcish Pick",                   0x20000000L, TV_DIGGING,    '\\', 2,    500,  2,   1, 180,  0,  0, 0,   0, {1, 3}, 20, Color_Iron}, // 87
     {"& Dwarven Pick",                  0x20000000L, TV_DIGGING,    '\\', 3,    1200, 3,   1, 200,  0,  0, 0,   0, {1, 4}, 50, Color_Mithril}, // 88
     {"& Gnomish Shovel",                0x20000000L, TV_DIGGING,    '\\', 1,    100,  5,   1, 50,   0,  0, 0,   0, {1, 2}, 20, Color_Steel}, // 89
@@ -434,8 +434,8 @@ DungeonObject_t game_objects[MAX_OBJECTS_IN_GAME] = {
     {"Heroism",                         0x00000010L, TV_POTION2,      '!', 0,     35,  98, 2,  4,  0, 0, 0, 0, {1, 1}, 0, Color_Blue}, // 361
     {"Boldness",                        0x00000040L, TV_POTION2,      '!', 0,     10, 100, 2,  4,  0, 0, 0, 0, {1, 1}, 0, Color_Blue}, // 362
     {"Slow Poison",                     0x00000800L, TV_POTION2,      '!', 0,     25, 105, 2,  4,  0, 0, 0, 0, {1, 1}, 0, Color_Blue}, // 363
-    {"& Brass Lantern~",                0x00000000L, TV_LIGHT,        '~', 7500,  35,   0, 1, 50,  0, 0, 0, 0, {1, 1}, 1, Color_Brass}, // 364
-    {"& Wooden Torch~",                 0x00000000L, TV_LIGHT,        '~', 4000,   2, 192, 5, 30,  0, 0, 0, 0, {1, 1}, 1, Color_Wooden}, // 365
+    {"& Brass Lantern~",                0x00000000L, TV_LIGHT,        '~', 3000,  35,   0, 1, 50,  0, 0, 0, 0, {1, 1}, 1, Color_Brass}, // 364
+    {"& Wooden Torch~",                 0x00000000L, TV_LIGHT,        '~', 1250,   2, 192, 5, 30,  0, 0, 0, 0, {1, 1}, 1, Color_Wooden}, // 365
     {"& Flask~ of Oil",                 0x00040000L, TV_FLASK,        '!', 7500,   3,  64, 5, 10,  0, 0, 0, 0, {2, 6}, 1, Color_Oil}, // 366
     // end store items
 
