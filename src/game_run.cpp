@@ -91,7 +91,7 @@ void startMoria(int seed, bool start_new_game) {
 
         initializeCharacterInventory();
         py.flags.food = 7500;
-        py.flags.food_digested = 8;
+        py.flags.food_digested = 2;
 
         // Spell and Mana based on class: Mage or Clerical realm.
         if (classes[py.misc.class_id].class_to_use_mage_spells == config::spells::SPELL_TYPE_MAGE) {
@@ -436,7 +436,18 @@ static int playerFoodConsumption() {
         py.flags.food -= py.flags.speed * py.flags.speed;
     }
 
-    py.flags.food -= py.flags.food_digested;
+    // See how much weight we are carrying.
+    int totalWeight = 0;
+    for (int i = 0; i < PLAYER_INVENTORY_SIZE; i++) {
+        if (py.inventory[i].category_id == TV_NOTHING) {
+            continue;
+        }
+        totalWeight += py.inventory[i].weight * py.inventory[i].items_count;
+    }
+    totalWeight += py.misc.au / 10; // count gold
+    const auto food_weight_loss = static_cast<int16_t>((static_cast<float>(totalWeight) / 100.0F) * py.flags.food_digested);
+
+    py.flags.food -= std::max(py.flags.food_digested, food_weight_loss);
 
     if (py.flags.food < 0) {
         playerTakesHit(-py.flags.food / 16, "starvation"); // -CJS-
