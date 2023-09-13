@@ -1055,7 +1055,8 @@ static void executeInputCommands(char &command, int &find_count) {
 
             // Get a count for a command.
             int repeat_count = 0;
-            if ((config::options::use_roguelike_keys && last_input_command >= '0' && last_input_command <= '9') || (!config::options::use_roguelike_keys && last_input_command == '#')) {
+            if ((config::options::use_roguelike_keys && last_input_command >= '0' && last_input_command <= '9') ||
+                (!config::options::use_roguelike_keys && last_input_command == '#')) {
                 repeat_count = getCommandRepeatCount(last_input_command);
             }
 
@@ -1499,11 +1500,15 @@ static void commandLocateOnMap() {
         if (panel.y == old_panel.y && panel.x == old_panel.x) {
             tmp_str[0] = '\0';
         } else {
-            (void) snprintf(tmp_str,                                                                 //
-                           80,                                                                       //
-                           "%s%s of",                                                                //
-                           panel.y < old_panel.y ? " North" : panel.y > old_panel.y ? " South" : "", //
-                           panel.x < old_panel.x ? " West" : panel.x > old_panel.x ? " East" : ""    //
+            (void) snprintf(tmp_str,   //
+                            80,        //
+                            "%s%s of", //
+                            panel.y < old_panel.y   ? " North"
+                            : panel.y > old_panel.y ? " South"
+                                                    : "", //
+                            panel.x < old_panel.x   ? " West"
+                            : panel.x > old_panel.x ? " East"
+                                                    : "" //
             );
         }
 
@@ -2001,7 +2006,7 @@ static void playerRegenerateHitPoints(int percent) {
     int32_t new_chp_fraction = (new_chp & 0xFFFF) + py.misc.current_hp_fraction;
 
     if (new_chp_fraction >= 0x10000L) {
-        py.misc.current_hp_fraction = (uint16_t)(new_chp_fraction - 0x10000L);
+        py.misc.current_hp_fraction = (uint16_t) (new_chp_fraction - 0x10000L);
         py.misc.current_hp++;
     } else {
         py.misc.current_hp_fraction = (uint16_t) new_chp_fraction;
@@ -2035,7 +2040,7 @@ static void playerRegenerateMana(int percent) {
     int32_t new_mana_fraction = (new_mana & 0xFFFF) + py.misc.current_mana_fraction;
 
     if (new_mana_fraction >= 0x10000L) {
-        py.misc.current_mana_fraction = (uint16_t)(new_mana_fraction - 0x10000L);
+        py.misc.current_mana_fraction = (uint16_t) (new_mana_fraction - 0x10000L);
         py.misc.current_mana++;
     } else {
         py.misc.current_mana_fraction = (uint16_t) new_mana_fraction;
