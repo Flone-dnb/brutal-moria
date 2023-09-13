@@ -179,7 +179,7 @@ int displayEquipment(bool showWeights, int column) {
         }
 
         // Get position
-        const char *equippedDescription = equipmentPositionDescription((PlayerEquipment)i, py.inventory[i].weight);
+        const char *equippedDescription = equipmentPositionDescription((PlayerEquipment) i, py.inventory[i].weight);
 
         obj_desc_t description = {'\0'};
         itemDescription(description, py.inventory[i], true);
@@ -300,7 +300,8 @@ static void uiCommandSwitchScreen(Screen nextScreen) {
             currentLinePos = py.pack.unique_items;
             break;
         case Screen::Wear:
-            game.screen.screen_left_pos = displayInventoryItems(game.screen.wear_low_id, game.screen.wear_high_id, config::options::show_inventory_weights, game.screen.screen_left_pos, CNIL);
+            game.screen.screen_left_pos =
+                displayInventoryItems(game.screen.wear_low_id, game.screen.wear_high_id, config::options::show_inventory_weights, game.screen.screen_left_pos, CNIL);
             currentLinePos = game.screen.wear_high_id - game.screen.wear_low_id + 1;
             break;
         case Screen::Equipment:
@@ -962,10 +963,11 @@ static void inventoryDisplayAppropriateHeader() {
             int capacityQuotient = playerCarryingLoadLimit() / 10;
             int capacityRemainder = playerCarryingLoadLimit() % 10;
 
-            (void) snprintf(msg, 160, "You are carrying %d.%d pounds. Your capacity is %d.%d pounds. In your pack is -", weightQuotient, weightRemainder, capacityQuotient, capacityRemainder);
+            (void) snprintf(msg, 160, "You are carrying %d.%d pounds. Your capacity is %d.%d pounds. In your pack is -", weightQuotient, weightRemainder, capacityQuotient,
+                            capacityRemainder);
         }
 
-        putStringClearToEOL(msg, Coord_t{0, 0}  );
+        putStringClearToEOL(msg, Coord_t{0, 0});
     } else if (game.screen.current_screen_id == Screen::Wear) {
         if (game.screen.wear_high_id < game.screen.wear_low_id) {
             putStringClearToEOL("You have nothing you could wield.", Coord_t{0, 0});
@@ -1186,26 +1188,26 @@ bool inventoryGetInputForItemId(int &commandKeyId, const char *prompt, int itemI
         vtype_t description = {'\0'};
 
         if (packFull) {
-            (void) snprintf(description,                                      //
-                           80,                                                //
-                           "(%s: %c-%c,%s%s / for %s, or ESC) %s",            //
-                           (menu == PackMenu::Inventory ? "Inven" : "Equip"), //
-                           itemIdStart + 'a',                                 //
-                           itemIdEnd + 'a',                                   //
-                           (menu == PackMenu::Inventory ? " 0-9," : ""),      //
-                           (menuActive ? "" : " * to see,"),                  //
-                           (menu == PackMenu::Inventory ? "Equip" : "Inven"), //
-                           prompt                                             //
+            (void) snprintf(description,                                       //
+                            80,                                                //
+                            "(%s: %c-%c,%s%s / for %s, or ESC) %s",            //
+                            (menu == PackMenu::Inventory ? "Inven" : "Equip"), //
+                            itemIdStart + 'a',                                 //
+                            itemIdEnd + 'a',                                   //
+                            (menu == PackMenu::Inventory ? " 0-9," : ""),      //
+                            (menuActive ? "" : " * to see,"),                  //
+                            (menu == PackMenu::Inventory ? "Equip" : "Inven"), //
+                            prompt                                             //
             );
         } else {
             (void) snprintf(description,                                  //
-                           80,                                            //
-                           "(Items %c-%c,%s%s ESC to exit) %s",           //
-                           itemIdStart + 'a',                             //
-                           itemIdEnd + 'a',                               //
-                           (menu == PackMenu::Inventory ? " 0-9," : ""),  //
-                           (menuActive ? "" : " * for inventory list,"),  //
-                           prompt                                         //
+                            80,                                           //
+                            "(Items %c-%c,%s%s ESC to exit) %s",          //
+                            itemIdStart + 'a',                            //
+                            itemIdEnd + 'a',                              //
+                            (menu == PackMenu::Inventory ? " 0-9," : ""), //
+                            (menuActive ? "" : " * for inventory list,"), //
+                            prompt                                        //
             );
         }
 
