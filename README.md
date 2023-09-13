@@ -4,6 +4,7 @@ This fork brings the following changes:
 - Make visuals more colorful.
 - HP is now displayed in one row as "CURRENT / MAX" instead of having 2 rows.
 - Your inventory/equipment/gold weight now affects how fast you starve.
+- All prices are 50% higher compared to original.
 
 # Umoria COLOR
 

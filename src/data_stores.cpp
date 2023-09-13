@@ -8,17 +8,20 @@
 // clang-format off
 #include "headers.h"
 
+// Price offset to modify all prices at once. Don't make too high to avoid type overflow.
+constexpr int8_t po = 50;
+
 // Buying and selling adjustments for character race VS store owner race
 uint8_t race_gold_adjustments[PLAYER_MAX_RACES][PLAYER_MAX_RACES] = {
-    //Hum, HfE, Elf, Hal, Gno, Dwa, HfO, HfT
-    { 100, 105, 105, 110, 113, 115, 120, 125 }, // Human
-    { 110, 100, 100, 105, 110, 120, 125, 130 }, // Half-Elf
-    { 110, 105, 100, 105, 110, 120, 125, 130 }, // Elf
-    { 115, 110, 105,  95, 105, 110, 115, 130 }, // Halfling
-    { 115, 115, 110, 105,  95, 110, 115, 130 }, // Gnome
-    { 115, 120, 120, 110, 110,  95, 125, 135 }, // Dwarf
-    { 115, 120, 125, 115, 115, 130, 110, 115 }, // Half-Orc
-    { 110, 115, 115, 110, 110, 130, 110, 110 }, // Half-Troll
+    //Hum,      HfE,      Elf,      Hal,      Gno,      Dwa,      HfO,      HfT
+    { 100 + po, 105 + po, 105 + po, 110 + po, 113 + po, 115 + po, 120 + po, 125 + po}, // Human
+    { 110 + po, 100 + po, 100 + po, 105 + po, 110 + po, 120 + po, 125 + po, 130 + po}, // Half-Elf
+    { 110 + po, 105 + po, 100 + po, 105 + po, 110 + po, 120 + po, 125 + po, 130 + po}, // Elf
+    { 115 + po, 110 + po, 105 + po,  95 + po, 105 + po, 110 + po, 115 + po, 130 + po}, // Halfling
+    { 115 + po, 115 + po, 110 + po, 105 + po,  95 + po, 110 + po, 115 + po, 130 + po}, // Gnome
+    { 115 + po, 120 + po, 120 + po, 110 + po, 110 + po,  95 + po, 125 + po, 135 + po}, // Dwarf
+    { 115 + po, 120 + po, 125 + po, 115 + po, 115 + po, 130 + po, 110 + po, 115 + po}, // Half-Orc
+    { 110 + po, 115 + po, 115 + po, 110 + po, 110 + po, 130 + po, 110 + po, 110 + po}, // Half-Troll
 };
 
 // game_objects[] index of objects that may appear in the store
