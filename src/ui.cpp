@@ -643,11 +643,16 @@ const char *statRating(Coord_t coord) {
     }
 }
 
+// Converts pounds to kilograms.
+static float convertPoundsToKilograms(float pounds) {
+    return pounds * 0.45359237F;
+}
+
 // Prints age, height, weight, and SC -JWT-
 void printCharacterVitalStatistics() {
     printHeaderNumber("Age          ", (int) py.misc.age, Coord_t{2, 38}, Color_Title);
     printHeaderNumber("Height       ", (int) py.misc.height, Coord_t{3, 38}, Color_Title);
-    printHeaderNumber("Weight       ", (int) py.misc.weight, Coord_t{4, 38}, Color_Title);
+    printHeaderNumber("Weight (kg)  ", (int) convertPoundsToKilograms(py.misc.weight), Coord_t{4, 38}, Color_Title);
     printHeaderNumber("Social Class ", (int) py.misc.social_class, Coord_t{5, 38}, Color_Title);
 }
 

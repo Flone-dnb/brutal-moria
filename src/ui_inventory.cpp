@@ -950,21 +950,23 @@ static bool selectItemCommands(char *command, char *which, bool selecting) {
     return selecting;
 }
 
+// Converts pounds to kilograms.
+static float convertPoundsToKilograms(float pounds) {
+    return pounds * 0.45359237F;
+}
+
 // Put an appropriate header message (on message line).
 static void inventoryDisplayAppropriateHeader() {
     if (game.screen.current_screen_id == Screen::Inventory) {
         obj_desc_t msg = {'\0'};
-        int weightQuotient = py.pack.weight / 10;
-        int weightRemainder = py.pack.weight % 10;
+        float weight = convertPoundsToKilograms(static_cast<float>(py.pack.weight) / 10.0F);
 
         if (!config::options::show_inventory_weights || py.pack.unique_items == 0) {
-            (void) snprintf(msg, 160, "You are carrying %d.%d pounds. In your pack there is %s", weightQuotient, weightRemainder, (py.pack.unique_items == 0 ? "nothing." : "-"));
+            (void) snprintf(msg, 160, "You are carrying %.1f kilograms. In your pack there is %s", weight, (py.pack.unique_items == 0 ? "nothing." : "-"));
         } else {
-            int capacityQuotient = playerCarryingLoadLimit() / 10;
-            int capacityRemainder = playerCarryingLoadLimit() % 10;
+            float capacity = convertPoundsToKilograms(static_cast<float>(playerCarryingLoadLimit()) / 10.0F);
 
-            (void) snprintf(msg, 160, "You are carrying %d.%d pounds. Your capacity is %d.%d pounds. In your pack is -", weightQuotient, weightRemainder, capacityQuotient,
-                            capacityRemainder);
+            (void) snprintf(msg, 160, "You are carrying %.1f kilograms. Your capacity is %.1f kilogram(s). In your pack is -", weight, capacity);
         }
 
         putStringClearToEOL(msg, Coord_t{0, 0});
