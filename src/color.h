@@ -261,5 +261,7 @@ typedef struct {
 
 #define Color_Wall Color_Light_Orange
 #define Color_Floor Color_Medium_Grey_High
+#define Color_Floor_Permanent_Lit Color_Brass
+#define Color_Floor_Temporary_Lit Color_Brass
 
 #define Color_Default Color_White

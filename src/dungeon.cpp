@@ -180,7 +180,7 @@ char caveGetTileSymbol(Coord_t const &coord) {
     }
 
     if (py.flags.image > 0 && randomNumber(12) == 1) {
-        return (uint8_t)(randomNumber(95) + 31);
+        return (uint8_t) (randomNumber(95) + 31);
     }
 
     if (tile.creature_id > 1 && monsters[tile.creature_id].lit) {
@@ -257,6 +257,12 @@ int caveGetTileColor(Coord_t const &coord) {
     }
 
     if (tile.feature_id <= MAX_CAVE_FLOOR) {
+        if (tile.permanent_light) {
+            return Color_Floor_Permanent_Lit;
+        }
+        if (tile.temporary_light) {
+            return Color_Floor_Temporary_Lit;
+        }
         return Color_Floor;
     }
 
@@ -481,14 +487,11 @@ static void redrawEffects(Coord_t const &coord) {
         for (location.x = left; location.x <= right; location.x++) {
             Tile_t &tile = dg.floor[location.y][location.x];
 
-            if ((tile.creature_id  > 1 && monsterIsVisible(monsters[tile.creature_id]))
-                || (tile.treasure_id && caveTileVisible(location))
-            ) {
+            if ((tile.creature_id > 1 && monsterIsVisible(monsters[tile.creature_id])) || (tile.treasure_id && caveTileVisible(location))) {
                 int color = caveGetTileColor(location);
 
                 if (color == Color_Fire || color == Color_Shadow_And_Flame || color == Color_Random ||
-                    (tile.creature_id > 1 && (color == Color_Glowing || color == Color_Lightning))
-                ) {
+                    (tile.creature_id > 1 && (color == Color_Glowing || color == Color_Lightning))) {
                     panelPutTile(caveGetTileSymbol(location), caveGetTileColor(location), location);
                 }
             }
