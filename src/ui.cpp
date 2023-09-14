@@ -325,7 +325,7 @@ void printCharacterCurrentArmorClass() {
 
 // Prints current gold -RAK-
 void printCharacterGoldValue() {
-    printLongNumber(py.misc.au, Coord_t{20, STAT_COLUMN + 6}, Color_Title);
+    printLongNumber(py.misc.au, Coord_t{20, STAT_COLUMN + 6}, Color_Gold);
 }
 
 // Prints depth in stat area -RAK-
