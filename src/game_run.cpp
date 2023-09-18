@@ -127,6 +127,10 @@ void startMoria(int seed, bool start_new_game) {
 
     if (generate) {
         generateCave();
+
+        // Print starting message.
+        printMessage("Welcome adventurer to the dungeons of Moria.");
+        printMessage("Your objective is to dive deep into the Mines of Moria and kill the Balrog.");
     }
 
     // Loop till dead, or exit
@@ -448,7 +452,6 @@ static int playerFoodConsumption() {
     const auto food_weight_loss = static_cast<int16_t>((static_cast<float>(totalWeight) / 140.0F) * py.flags.food_digested);
 
     py.flags.food -= std::max(py.flags.food_digested, food_weight_loss);
-    printMessage((std::string("(loss is: ") + std::to_string(std::max(py.flags.food_digested, food_weight_loss))).c_str());
 
     if (py.flags.food < 0) {
         playerTakesHit(-py.flags.food / 16, "starvation"); // -CJS-
