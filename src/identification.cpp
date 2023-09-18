@@ -380,7 +380,7 @@ void itemSetAsIdentified(int category_id, int sub_category_id) {
     }
 
     id <<= 6;
-    id += (uint8_t)(sub_category_id & (ITEM_SINGLE_STACK_MIN - 1));
+    id += (uint8_t) (sub_category_id & (ITEM_SINGLE_STACK_MIN - 1));
 
     objects_identified[id] |= config::identification::OD_KNOWN1;
 
@@ -400,7 +400,7 @@ static void unsample(Inventory_t &item) {
     }
 
     id <<= 6;
-    id += (uint8_t)(item.sub_category_id & (ITEM_SINGLE_STACK_MIN - 1));
+    id += (uint8_t) (item.sub_category_id & (ITEM_SINGLE_STACK_MIN - 1));
 
     // clear the tried flag, since it is now known
     clearObjectTriedFlag(id);
@@ -446,7 +446,7 @@ bool itemSetColorlessAsIdentified(int category_id, int sub_category_id, int iden
     }
 
     id <<= 6;
-    id += (uint8_t)(sub_category_id & (ITEM_SINGLE_STACK_MIN - 1));
+    id += (uint8_t) (sub_category_id & (ITEM_SINGLE_STACK_MIN - 1));
 
     return isObjectKnown(id);
 }
@@ -460,7 +460,7 @@ void itemSetAsTried(Inventory_t const &item) {
     }
 
     id <<= 6;
-    id += (uint8_t)(item.sub_category_id & (ITEM_SINGLE_STACK_MIN - 1));
+    id += (uint8_t) (item.sub_category_id & (ITEM_SINGLE_STACK_MIN - 1));
 
     setObjectTriedFlag(id);
 }
@@ -568,7 +568,7 @@ void itemDescription(obj_desc_t description, Inventory_t const &item, bool add_p
         case TV_SLING_AMMO:
         case TV_BOLT:
         case TV_ARROW:
-            (void) snprintf(damstr, 80, " (%dd%d)", item.damage.dice, item.damage.sides);
+            (void) snprintf(damstr, 80, " DMG %dd%d", item.damage.dice, item.damage.sides);
             break;
         case TV_LIGHT:
             misc_type = ItemMiscUse::Light;
@@ -576,17 +576,17 @@ void itemDescription(obj_desc_t description, Inventory_t const &item, bool add_p
         case TV_SPIKE:
             break;
         case TV_BOW:
-            (void) snprintf(damstr, 80, " (x%d)", bowDamageValue(item.misc_use));
+            (void) snprintf(damstr, 80, " DMG x%d", bowDamageValue(item.misc_use));
             break;
         case TV_HAFTED:
         case TV_POLEARM:
         case TV_SWORD:
-            (void) snprintf(damstr, 80, " (%dd%d)", item.damage.dice, item.damage.sides);
+            (void) snprintf(damstr, 80, " DMG %dd%d", item.damage.dice, item.damage.sides);
             misc_type = ItemMiscUse::Flags;
             break;
         case TV_DIGGING:
             misc_type = ItemMiscUse::ZPlusses;
-            (void) snprintf(damstr, 80, " (%dd%d)", item.damage.sides, item.damage.sides);
+            (void) snprintf(damstr, 80, " %dd%d", item.damage.sides, item.damage.sides);
             break;
         case TV_BOOTS:
         case TV_GLOVES:
@@ -759,12 +759,12 @@ void itemDescription(obj_desc_t description, Inventory_t const &item, bool add_p
         auto abs_to_hit = (int) std::abs((std::intmax_t) item.to_hit);
         auto abs_to_damage = (int) std::abs((std::intmax_t) item.to_damage);
 
-        if ((item.identification & config::identification::ID_SHOW_HIT_DAM) != 0) {
-            (void) snprintf(tmp_str, 80, " (%c%d,%c%d)", (item.to_hit < 0) ? '-' : '+', abs_to_hit, (item.to_damage < 0) ? '-' : '+', abs_to_damage);
+        if (((item.identification & config::identification::ID_SHOW_HIT_DAM) != 0) && (item.to_hit != 0 || item.to_damage != 0)) {
+            (void) snprintf(tmp_str, 80, " (HIT %c%d, DMG %c%d)", (item.to_hit < 0) ? '-' : '+', abs_to_hit, (item.to_damage < 0) ? '-' : '+', abs_to_damage);
         } else if (item.to_hit != 0) {
-            (void) snprintf(tmp_str, 80, " (%c%d)", (item.to_hit < 0) ? '-' : '+', abs_to_hit);
+            (void) snprintf(tmp_str, 80, " (HIT %c%d)", (item.to_hit < 0) ? '-' : '+', abs_to_hit);
         } else if (item.to_damage != 0) {
-            (void) snprintf(tmp_str, 80, " (%c%d)", (item.to_damage < 0) ? '-' : '+', abs_to_damage);
+            (void) snprintf(tmp_str, 80, " (DMG %c%d)", (item.to_damage < 0) ? '-' : '+', abs_to_damage);
         } else {
             tmp_str[0] = '\0';
         }
@@ -774,17 +774,16 @@ void itemDescription(obj_desc_t description, Inventory_t const &item, bool add_p
     // Crowns have a zero base AC, so make a special test for them.
     auto abs_to_ac = (int) std::abs((std::intmax_t) item.to_ac);
     if (item.ac != 0 || item.category_id == TV_HELM) {
-        (void) snprintf(tmp_str, 80, " [%d", item.ac);
+        (void) snprintf(tmp_str, 80, " AC %d", item.ac);
         (void) strcat(tmp_val, tmp_str);
-        if (spellItemIdentified(item)) {
+        if (spellItemIdentified(item) && item.to_ac != 0) {
             // originally used %+d, but several machines don't support it
-            (void) snprintf(tmp_str, 80, ",%c%d", (item.to_ac < 0) ? '-' : '+', abs_to_ac);
+            (void) snprintf(tmp_str, 80, "%c%d", (item.to_ac < 0) ? '-' : '+', abs_to_ac);
             (void) strcat(tmp_val, tmp_str);
         }
-        (void) strcat(tmp_val, "]");
     } else if (item.to_ac != 0 && spellItemIdentified(item)) {
         // originally used %+d, but several machines don't support it
-        (void) snprintf(tmp_str, 80, " [%c%d]", (item.to_ac < 0) ? '-' : '+', abs_to_ac);
+        (void) snprintf(tmp_str, 80, " (AC %c%d)", (item.to_ac < 0) ? '-' : '+', abs_to_ac);
         (void) strcat(tmp_val, tmp_str);
     }
 
