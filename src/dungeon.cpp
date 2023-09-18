@@ -258,6 +258,10 @@ int caveGetTileColor(Coord_t const &coord) {
 
     if (tile.feature_id <= MAX_CAVE_FLOOR) {
         if (tile.permanent_light) {
+            if (tile.feature_id == 1) {
+                return Color_Town_Floor;
+            }
+
             return Color_Floor_Permanent_Lit;
         }
         if (tile.temporary_light) {
@@ -267,6 +271,9 @@ int caveGetTileColor(Coord_t const &coord) {
     }
 
     if (tile.feature_id == TILE_GRANITE_WALL || tile.feature_id == TILE_BOUNDARY_WALL || !config::options::highlight_seams) {
+        if (tile.feature_id == TILE_BOUNDARY_WALL) {
+            return Color_Town_Wall;
+        }
         return Color_Wall;
     }
 
