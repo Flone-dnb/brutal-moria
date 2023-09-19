@@ -5,12 +5,16 @@
 
 #include "headers.h"
 
+// Converts pounds to kilograms.
+static float convertPoundsToKilograms(float pounds) {
+    return pounds * 0.45359237F;
+}
+
 static void inventoryItemWeightText(char *text, int itemId) {
     int totalWeight = py.inventory[itemId].weight * py.inventory[itemId].items_count;
-    int quotient = totalWeight / 10;
-    int remainder = totalWeight % 10;
+    float weight = convertPoundsToKilograms(static_cast<float>(totalWeight) / 10.0F);
 
-    (void) snprintf(text, 160, "%3d.%d lb", quotient, remainder);
+    (void) snprintf(text, 160, "%.1f kg", weight);
 }
 
 // Displays inventory items from `item_id_start` to `item_id_end` -RAK-
@@ -948,11 +952,6 @@ static bool selectItemCommands(char *command, char *which, bool selecting) {
     }
 
     return selecting;
-}
-
-// Converts pounds to kilograms.
-static float convertPoundsToKilograms(float pounds) {
-    return pounds * 0.45359237F;
 }
 
 // Put an appropriate header message (on message line).
