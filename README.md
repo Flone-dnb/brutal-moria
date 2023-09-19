@@ -8,6 +8,7 @@ This fork brings the following changes:
     - Item properties are now displayed as letters instead of numbers, for example:
         - Instead of `a Small Metal Shield [3,+1]` we have `a Small Metal Shield AC 3+1`.
         - Instead of `a Small Sword 1d6 (+0,+1)` we have `a Small Sword 1d6 (HIT +0, DMG +1)`.
+    - `Look` command now also displays approximated health of a creature, for example: `You see a Large Brown Snake (looks wounded).`.
 - Gameplay
     - Your inventory/equipment/gold weight now affects how fast you feel hunger.
 - Misc

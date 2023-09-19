@@ -497,7 +497,15 @@ static bool lookSee(Coord_t coord, bool &transparent) {
 
     if (los_rocks_and_objects == 0 && tile.creature_id > 1 && monsters[tile.creature_id].lit) {
         j = monsters[tile.creature_id].creature_id;
-        (void) snprintf(msg, 160, "%s %s %s. [(r)ecall]", description, isVowel(creatures_list[j].name[0]) ? "an" : "a", creatures_list[j].name);
+
+        const auto hpPercent = static_cast<float>(monsters[tile.creature_id].hp) / static_cast<float>(maxDiceRoll(creatures_list[j].hit_die)) * 100.0F;
+
+        (void) snprintf(msg, 160, "%s %s %s (looks %s). [(r)ecall]", description, isVowel(creatures_list[j].name[0]) ? "an" : "a", creatures_list[j].name,
+                        hpPercent > 80.0F   ? "perfect"
+                        : hpPercent > 60.0F ? "fine"
+                        : hpPercent > 40.0F ? "slightly wounded"
+                        : hpPercent > 20.0F ? "wounded"
+                                            : "badly wounded");
         description = "It is on";
         putStringClearToEOL(msg, Coord_t{0, 0});
 
