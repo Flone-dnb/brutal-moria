@@ -1623,6 +1623,7 @@ static void doWizardCommands(char command) {
             playerTeleport(100);
             break;
         case '%':
+        case '~':
             // Generate a dungeon item!
             wizardGenerateObject();
             drawDungeonPanel();
