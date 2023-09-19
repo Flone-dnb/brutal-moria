@@ -153,7 +153,7 @@ static bool playerDrinkPotion(uint32_t flags, uint8_t item_type) {
                 break;
             case PotionSpellTypes::GainExperience:
                 if (py.misc.exp < config::player::PLAYER_MAX_EXP) {
-                    auto exp = (uint32_t)((py.misc.exp / 2) + 10);
+                    auto exp = (uint32_t) ((py.misc.exp / 2) + 10);
                     if (exp > 100000L) {
                         exp = 100000L;
                     }
@@ -168,7 +168,7 @@ static bool playerDrinkPotion(uint32_t flags, uint8_t item_type) {
                 if (!py.flags.free_action) {
                     // paralysis must == 0, otherwise could not drink potion
                     printMessage("You fall asleep.");
-                    py.flags.paralysis += randomNumber(4) + 4;
+                    py.flags.paralysis += randomNumber(30) + 30;
                     identified = true;
                 }
                 break;
@@ -177,21 +177,21 @@ static bool playerDrinkPotion(uint32_t flags, uint8_t item_type) {
                     printMessage("You are covered by a veil of darkness.");
                     identified = true;
                 }
-                py.flags.blind += randomNumber(100) + 100;
+                py.flags.blind += randomNumber(100) + 50;
                 break;
             case PotionSpellTypes::Confusion:
                 if (py.flags.confused == 0) {
                     printMessage("Hey!  This is good stuff!  * Hick! *");
                     identified = true;
                 }
-                py.flags.confused += randomNumber(20) + 12;
+                py.flags.confused += randomNumber(50) + 25;
                 break;
             case PotionSpellTypes::Poison:
                 if (py.flags.poisoned == 0) {
                     printMessage("You feel very sick.");
                     identified = true;
                 }
-                py.flags.poisoned += randomNumber(15) + 10;
+                py.flags.poisoned += randomNumber(15) + 15 + py.misc.level * 5;
                 break;
             case PotionSpellTypes::HasteSelf:
                 if (py.flags.fast == 0) {
@@ -241,7 +241,7 @@ static bool playerDrinkPotion(uint32_t flags, uint8_t item_type) {
                     int32_t exp = py.misc.exp / 5;
 
                     if (py.misc.exp > SHRT_MAX) {
-                        auto scale = (int32_t)(INT_MAX / py.misc.exp);
+                        auto scale = (int32_t) (INT_MAX / py.misc.exp);
                         exp += (randomNumber((int) scale) * py.misc.exp) / (scale * 5);
                     } else {
                         exp += randomNumber((int) py.misc.exp) / 5;

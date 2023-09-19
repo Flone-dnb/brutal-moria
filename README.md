@@ -11,10 +11,14 @@ This fork brings the following changes:
     - `Look` command now also displays approximated health of a creature, for example: `You see a Large Brown Snake (looks wounded).`.
 - Gameplay
     - Your inventory/equipment/gold weight now affects how fast you feel hunger.
-- Misc
-    - All prices are 50% higher compared to original.
+- Items
     - "Wooden Torch" now burns out after 1250 turns (4000 in original).
     - "Brass Lantern" now burns out after 3000 turns (7500 in original).
+    - Potion of Poison now lasts much longer.
+    - Potion of Confusion now lasts longer.
+    - Potion of Sleep now lasts slightly longer.
+- Misc
+    - All prices are 50% higher compared to original.
 
 # Umoria COLOR
 
