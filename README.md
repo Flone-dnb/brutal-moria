@@ -5,6 +5,7 @@ This fork brings the following changes:
     - Make visuals more colorful.
     - Display weight in kilograms instead of pounds.
     - HP is now displayed in one row as "CURRENT / MAX" instead of having 2 rows.
+    - Level depth is now displayed as `Depth: X` instead of `X feet`.
     - Item properties are now displayed as letters instead of numbers, for example:
         - Instead of `a Small Metal Shield [3,+1]` we have `a Small Metal Shield AC 3+1`.
         - Instead of `a Small Sword 1d6 (+0,+1)` we have `a Small Sword 1d6 (HIT +0, DMG +1)`.

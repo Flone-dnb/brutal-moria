@@ -332,12 +332,10 @@ void printCharacterGoldValue() {
 void printCharacterCurrentDepth() {
     vtype_t depths = {'\0'};
 
-    int depth = dg.current_level * 50;
-
-    if (depth == 0) {
+    if (dg.current_level == 0) {
         (void) strcpy(depths, "Town level");
     } else {
-        (void) snprintf(depths, 80, "%d feet", depth);
+        (void) snprintf(depths, 80, "Depth: %d", dg.current_level);
     }
 
     putStringClearToEOL(depths, Coord_t{23, 65}, Color_Title);
