@@ -129,17 +129,22 @@ static void displayStoreInventory(Store_t &store, int item_pos_start) {
         // from player's known (identified) items
         // because stores should sell unidentified items.
         const auto item_identification = item.identification;
-        item.identification = 0;
 
+        // Remove identification from description/color because stores should sell unidentified items.
+        item.identification &= ~config::identification::ID_KNOWN2;
+        item.identification &= ~config::identification::ID_STORE_BOUGHT;
+
+        // Generate item description.
         itemDescription(description, item, true);
-
-        // Restore item's identification.
-        item.identification = item_identification;
 
         // Restore the number of items
         item.items_count = (uint8_t) current_item_count;
 
+        // Generate item color.
         int color = itemColor(&item, true);
+
+        // Restore item's identification.
+        item.identification = item_identification;
 
         obj_desc_t msg = {'\0'};
         (void) snprintf(msg, 160, "%c) %s", 'a' + item_line_num, description);
