@@ -20,7 +20,7 @@ void storeInitializeOwners() {
     for (int store_id = 0; store_id < MAX_STORES; store_id++) {
         Store_t &store = stores[store_id];
 
-        store.owner_id = (uint8_t)(MAX_STORES * (randomNumber(count) - 1) + store_id);
+        store.owner_id = (uint8_t) (MAX_STORES * (randomNumber(count) - 1) + store_id);
         store.insults_counter = 0;
         store.turns_left_before_closing = 0;
         store.unique_items_counter = 0;
@@ -124,7 +124,17 @@ static void displayStoreInventory(Store_t &store, int item_pos_start) {
         }
 
         obj_desc_t description = {'\0'};
+
+        // Clear store item identification to get its description
+        // from player's known (identified) items
+        // because stores should sell unidentified items.
+        const auto item_identification = item.identification;
+        item.identification = 0;
+
         itemDescription(description, item, true);
+
+        // Restore item's identification.
+        item.identification = item_identification;
 
         // Restore the number of items
         item.items_count = (uint8_t) current_item_count;
@@ -518,7 +528,7 @@ static BidState storePurchaseHaggle(int store_id, int32_t &price, Inventory_t co
 
                 // Set the automatic haggle increment so that RET will give
                 // a new_offer equal to the final_asking_price price.
-                store_last_increment = (int16_t)(final_asking_price - new_offer);
+                store_last_increment = (int16_t) (final_asking_price - new_offer);
                 final_flag++;
 
                 if (final_flag > 3) {
@@ -548,7 +558,7 @@ static BidState storePurchaseHaggle(int store_id, int32_t &price, Inventory_t co
                 // If the current increment would take you over the store's
                 // price, then decrease it to an exact match.
                 if (current_asking_price - last_offer < store_last_increment) {
-                    store_last_increment = (int16_t)(current_asking_price - last_offer);
+                    store_last_increment = (int16_t) (current_asking_price - last_offer);
                 }
             }
         }
@@ -739,7 +749,7 @@ static BidState storeSellHaggle(int store_id, int32_t &price, Inventory_t const 
 
                     // Set the automatic haggle increment so that RET will give
                     // a new_offer equal to the final_asking_price price.
-                    store_last_increment = (int16_t)(final_asking_price - new_offer);
+                    store_last_increment = (int16_t) (final_asking_price - new_offer);
                     final_flag++;
 
                     if (final_flag > 3) {
@@ -769,7 +779,7 @@ static BidState storeSellHaggle(int store_id, int32_t &price, Inventory_t const 
                     // If the current decrement would take you under the store's
                     // price, then increase it to an exact match.
                     if (current_asking_price - last_offer > store_last_increment) {
-                        store_last_increment = (int16_t)(current_asking_price - last_offer);
+                        store_last_increment = (int16_t) (current_asking_price - last_offer);
                     }
                 }
             }
@@ -845,6 +855,10 @@ static bool storePurchaseAnItem(int store_id, int &current_top_item_id) {
             printSpeechFinishedHaggling();
             storeDecreaseInsults(store_id);
             py.misc.au -= price;
+
+            // Clear any identification of this item before placing it in player's inventory
+            // because stores should sell unidentified items.
+            sell_item.identification = 0;
 
             int new_item_id = inventoryCarryItem(sell_item);
             int saved_store_counter = store.unique_items_counter;

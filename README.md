@@ -12,6 +12,7 @@ This fork brings the following changes:
     - `Look` command now also displays approximated health of a creature, for example: `You see a Large Brown Snake (looks wounded).`.
 - Gameplay
     - Your inventory/equipment/gold weight now affects how fast you feel hunger.
+    - Store items are no longer identified their identification is now based on player's knowledge.
 - Items
     - Light items (Torch, Lantern, Flask of Oil) are now more expensive and have less "capacity" (turns).
     - Potions of Poison/Confusion/Sleep now last longer.
