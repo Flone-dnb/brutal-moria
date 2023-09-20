@@ -21,7 +21,7 @@ This fork brings the following changes:
 - Misc
     - All prices are 50% higher compared to original.
 
-# Umoria COLOR
+# The Dungeons of Moria
 
 _The Dungeons of Moria_ is a single player dungeon simulation originally
 written by Robert Alan Koeneke, with its first public release in 1983.
@@ -41,51 +41,15 @@ Supported Platforms:
 Compiling and limited testing has been done for other Linux based system
 including NetBSD 8.1 and Fedora 32.
 
-
-## Umoria COLOR
+## Umoria Color
 
 Colour-Umoria was a patch originally written in 1993 by Edouard Poor. In 2020
 it was ported by Andrew Weber as a fork of the modernized Umoria restoration
 release.
 
-* The correct spelling of "color" is now used 🇺🇸🦅🗽
-* Many colors and color assignments were adjusted
-* Roguelike controls are now disabled by default to encourage new players to try the game out
-* Walking into a door will attempt to open it automatically without having to press the `'o'` key
-* Fire, lightning, and glowing effects were added
-
-## Umoria 5.7.x releases
-
-The main focus of the `5.7.0` release was to provide support for the three
-main operating systems: Windows, macOS, and Linux. Support for all other
-outdated computer systems such as MS DOS, "Classic" Mac OS (pre OSX), Amiga,
-and Atari ST was removed.
-
-_Note: there have been no intentional game play changes in the 5.7.x releases._
-
-Since the initial 5.7 release, a great deal of _code restoration_ has been
-undertaken in the hope of aiding future development of the game. Some examples
-of the work done include reformatting the source code with the help of
-`clang-tidy` and `clang-format`, modernizing the code to use standard C types,
-breaking apart most large functions (many of which had hundreds of lines of code)
-into smaller, easier to read functions, and fixing all compiler warnings when
-compiling against recent versions of GCC and Clang.
-
-Full details of all changes can be found in the [CHANGELOG](CHANGELOG.md), and
-by browsing the commit history.
-
-Due to its lack of Windows and macOS support Moria was inaccessible to many
-people. Hopefully these changes will give many more people a chance to play
-this classic roguelike game.
-
-
 ## Notes on Compiling Umoria
 
-Umoria has been tested against GCC (`10` and `11`) and with `ncurses 6.x`,
-although recent earlier versions should also work fine.
-
-You will need these as well as `CMake` and the C++ build tools for your system.
-
+You will need `ncurses` as well as `CMake` and the C++ build tools for your system.
 
 ### macOS and Linux
 
@@ -101,7 +65,6 @@ NOTE: use `make -j $(nproc)` to speed up compilation on Linux.
 An `umoria` directory will be created in the current directory containing the
 game binary and data files, which can then be moved to any other location, such
 as the `home` directory.
-
 
 ### Windows
 
@@ -128,7 +91,6 @@ To perform an out-of-source build, type the following:
 
 As with the macOS/Linux builds, all files will be installed into an `umoria` directory.
 
-
 ## Historical Documents
 
 Most of the original document files included in the Umoria 5.6 sources have
@@ -140,15 +102,6 @@ Umoria, these can make for interesting reading.
 There is also the original Moria Manual and FAQ. Although these are a little
 outdated now they are certainly worth reading as they contain a lot of
 interesting and useful information.
-
-
-## Code of Conduct and Contributions
-
-See here for details on our [Code of Conduct](CODE_OF_CONDUCT.md).
-
-For details on how to contribute to the Umoria project, please read our
-[contributing](CONTRIBUTING.md) guide.
-
 
 ## License Information
 
