@@ -86,6 +86,11 @@ int32_t storeItemValue(Inventory_t const &item) {
         value = value * item.items_count;
     }
 
+    if (isArmor(item.category_id)) {
+        const auto condition = static_cast<float>(item.misc_use) / static_cast<float>(ARMOR_MAX_CONDITION);
+        value *= condition;
+    }
+
     return value;
 }
 
@@ -361,6 +366,11 @@ static void storeItemCreate(int store_id, int16_t max_cost) {
                 // equivalent to calling spellIdentifyItem(),
                 // except will not change the objects_identified array.
                 itemIdentifyAsStoreBought(item);
+
+                if (isArmor(item.category_id)) {
+                    // Generate a random condition.
+                    item.misc_use = 1 + randomNumber(ARMOR_MAX_CONDITION - 1);
+                }
 
                 int dummy;
                 storeCarryItem(store_id, dummy, item);

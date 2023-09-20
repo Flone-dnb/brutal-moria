@@ -97,6 +97,8 @@ extern int amulet_colors[MAX_AMULETS];
 
 void identifyGameObject();
 
+const char *getArmorConditionName(int16_t misc_use);
+bool isArmor(uint8_t category_id);
 void magicInitializeItemNames();
 int16_t objectPositionOffset(int category_id, int sub_category_id);
 void itemSetAsIdentified(int category_id, int sub_category_id);
@@ -109,7 +111,7 @@ void itemIdentifyAsStoreBought(Inventory_t &item);
 void itemSetAsTried(Inventory_t const &item);
 void itemIdentify(Inventory_t &item, int &item_id);
 void itemRemoveMagicNaming(Inventory_t &item);
-void itemDescription(obj_desc_t description, Inventory_t const &item, bool add_prefix);
+void itemDescription(obj_desc_t description, Inventory_t const &item, bool add_prefix, bool add_condition = true);
 void itemChargesRemainingDescription(int item_id);
 void itemTypeRemainingCountDescription(int item_id);
 void itemInscribe();

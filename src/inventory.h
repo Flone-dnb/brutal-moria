@@ -26,6 +26,9 @@ constexpr uint8_t ITEM_GROUP_MAX = 255;
 // Size of an inscription in the Inventory_t. Notice alignment, must be 4*x + 1
 constexpr uint8_t INSCRIP_SIZE = 13;
 
+// How much hits an armor piece can take before breaking and disappearing.
+constexpr int16_t ARMOR_MAX_CONDITION = 5;
+
 // Inventory_t is created for an item the player may wear about
 // their person, or store in their inventory pack.
 //

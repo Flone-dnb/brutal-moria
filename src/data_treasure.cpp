@@ -154,47 +154,47 @@ DungeonObject_t game_objects[MAX_OBJECTS_IN_GAME] = {
     {"& Dwarven Pick",                  0x20000000L, TV_DIGGING,    '\\', 3,    1200, 3,   1, 200,  0,  0, 0,   0, {1, 4}, 50, Color_Mithril}, // 88
     {"& Gnomish Shovel",                0x20000000L, TV_DIGGING,    '\\', 1,    100,  5,   1, 50,   0,  0, 0,   0, {1, 2}, 20, Color_Steel}, // 89
     {"& Dwarven Shovel",                0x20000000L, TV_DIGGING,    '\\', 2,    250,  6,   1, 120,  0,  0, 0,   0, {1, 3}, 40, Color_Mithril}, // 90
-    {"& Pair of Soft Leather Shoes",    0x00000000L, TV_BOOTS,       ']', 0,    4,    1,   1, 5,    0,  0, 1,   0, {0, 0}, 1, Color_Leather}, // 91
-    {"& Pair of Soft Leather Boots",    0x00000000L, TV_BOOTS,       ']', 0,    7,    2,   1, 20,   0,  0, 2,   0, {1, 1}, 4, Color_Leather}, // 92
-    {"& Pair of Hard Leather Boots",    0x00000000L, TV_BOOTS,       ']', 0,    12,   3,   1, 40,   0,  0, 3,   0, {1, 1}, 6, Color_Leather}, // 93
-    {"& Soft Leather Cap",              0x00000000L, TV_HELM,        ']', 0,    4,    1,   1, 10,   0,  0, 1,   0, {0, 0}, 2, Color_Leather}, // 94
-    {"& Hard Leather Cap",              0x00000000L, TV_HELM,        ']', 0,    12,   2,   1, 15,   0,  0, 2,   0, {0, 0}, 4, Color_Leather}, // 95
-    {"& Metal Cap",                     0x00000000L, TV_HELM,        ']', 0,    30,   3,   1, 20,   0,  0, 3,   0, {1, 1}, 7, Color_Iron}, // 96
-    {"& Iron Helm",                     0x00000000L, TV_HELM,        ']', 0,    75,   4,   1, 75,   0,  0, 5,   0, {1, 3}, 20, Color_Iron}, // 97
-    {"& Steel Helm",                    0x00000000L, TV_HELM,        ']', 0,    200,  5,   1, 60,   0,  0, 6,   0, {1, 3}, 40, Color_Steel}, // 98
-    {"& Silver Crown",                  0x00000000L, TV_HELM,        ']', 0,    500,  6,   1, 20,   0,  0, 0,   0, {1, 1}, 44, Color_Silver}, // 99
-    {"& Golden Crown",                  0x00000000L, TV_HELM,        ']', 0,    1000, 7,   1, 30,   0,  0, 0,   0, {1, 2}, 47, Color_Gold}, // 100
-    {"& Jewel-Encrusted Crown",         0x00000000L, TV_HELM,        ']', 0,    2000, 8,   1, 40,   0,  0, 0,   0, {1, 3}, 50, Color_Amethyst}, // 101
-    {"& Robe",                          0x00000000L, TV_SOFT_ARMOR,  '(', 0,    4,    1,   1, 20,   0,  0, 2,   0, {0, 0}, 1, Color_Dark_Blue}, // 102
-    {"Soft Leather Armor",              0x00000000L, TV_SOFT_ARMOR,  '(', 0,    18,   2,   1, 80,   0,  0, 4,   0, {0, 0}, 2, Color_Leather}, // 103
-    {"Soft Studded Leather",            0x00000000L, TV_SOFT_ARMOR,  '(', 0,    35,   3,   1, 90,   0,  0, 5,   0, {1, 1}, 3, Color_Leather}, // 104
-    {"Hard Leather Armor",              0x00000000L, TV_SOFT_ARMOR,  '(', 0,    55,   4,   1, 100, -1,  0, 6,   0, {1, 1}, 5, Color_Leather}, // 105
-    {"Hard Studded Leather",            0x00000000L, TV_SOFT_ARMOR,  '(', 0,    100,  5,   1, 110, -1,  0, 7,   0, {1, 2}, 7, Color_Leather}, // 106
-    {"Woven Cord Armor",                0x00000000L, TV_SOFT_ARMOR,  '(', 0,    45,   6,   1, 150, -1,  0, 6,   0, {0, 0}, 7, Color_Cord}, // 107
-    {"Soft Leather Ring Mail",          0x00000000L, TV_SOFT_ARMOR,  '(', 0,    160,  7,   1, 130, -1,  0, 6,   0, {1, 2}, 10, Color_Leather}, // 108
-    {"Hard Leather Ring Mail",          0x00000000L, TV_SOFT_ARMOR,  '(', 0,    230,  8,   1, 150, -2,  0, 8,   0, {1, 3}, 12, Color_Leather}, // 109
-    {"Leather Scale Mail",              0x00000000L, TV_SOFT_ARMOR,  '(', 0,    330,  9,   1, 140, -1,  0, 11,  0, {1, 1}, 14, Color_Leather}, // 110
-    {"Metal Scale Mail",                0x00000000L, TV_HARD_ARMOR,  '[', 0,    430,  1,   1, 250, -2,  0, 13,  0, {1, 4}, 24, Color_Iron}, // 111
-    {"Chain Mail",                      0x00000000L, TV_HARD_ARMOR,  '[', 0,    530,  2,   1, 220, -2,  0, 14,  0, {1, 4}, 26, Color_Iron}, // 112
-    {"Rusty Chain Mail",                0x00000000L, TV_HARD_ARMOR,  '[', 0,    0,    3,   1, 220, -5,  0, 14, -8, {1, 4}, 26, Color_Rusty}, // 113
-    {"Double Chain Mail",               0x00000000L, TV_HARD_ARMOR,  '[', 0,    630,  4,   1, 260, -2,  0, 15,  0, {1, 4}, 28, Color_Iron}, // 114
-    {"Augmented Chain Mail",            0x00000000L, TV_HARD_ARMOR,  '[', 0,    675,  5,   1, 270, -2,  0, 16,  0, {1, 4}, 30, Color_Iron}, // 115
-    {"Bar Chain Mail",                  0x00000000L, TV_HARD_ARMOR,  '[', 0,    720,  6,   1, 280, -2,  0, 18,  0, {1, 4}, 34, Color_Iron}, // 116
-    {"Metal Brigandine Armor",          0x00000000L, TV_HARD_ARMOR,  '[', 0,    775,  7,   1, 290, -3,  0, 19,  0, {1, 4}, 36, Color_Steel}, // 117
-    {"Laminated Armor",                 0x00000000L, TV_HARD_ARMOR,  '[', 0,    825,  8,   1, 300, -3,  0, 20,  0, {1, 4}, 38, Color_Steel}, // 118
-    {"Partial Plate Armor",             0x00000000L, TV_HARD_ARMOR,  '[', 0,    900,  9,   1, 320, -3,  0, 22,  0, {1, 6}, 42, Color_Steel}, // 119
-    {"Metal Lamellar Armor",            0x00000000L, TV_HARD_ARMOR,  '[', 0,    950,  10,  1, 340, -3,  0, 23,  0, {1, 6}, 44, Color_Steel}, // 120
-    {"Full Plate Armor",                0x00000000L, TV_HARD_ARMOR,  '[', 0,    1050, 11,  1, 380, -3,  0, 25,  0, {2, 4}, 48, Color_Silver}, // 121
-    {"Ribbed Plate Armor",              0x00000000L, TV_HARD_ARMOR,  '[', 0,    1200, 12,  1, 380, -3,  0, 28,  0, {2, 4}, 50, Color_Silver}, // 122
-    {"& Cloak",                         0x00000000L, TV_CLOAK,       '(', 0,    3,    1,   1, 10,   0,  0, 1,   0, {0, 0}, 1, Color_Dark_Green}, // 123
-    {"& Set of Leather Gloves",         0x00000000L, TV_GLOVES,      ']', 0,    3,    1,   1, 5,    0,  0, 1,   0, {0, 0}, 1, Color_Leather}, // 124
-    {"& Set of Gauntlets",              0x00000000L, TV_GLOVES,      ']', 0,    35,   2,   1, 25,   0,  0, 2,   0, {1, 1}, 12, Color_Iron}, // 125
-    {"& Small Leather Shield",          0x00000000L, TV_SHIELD,      ')', 0,    30,   1,   1, 50,   0,  0, 2,   0, {1, 1}, 3, Color_Leather}, // 126
-    {"& Medium Leather Shield",         0x00000000L, TV_SHIELD,      ')', 0,    60,   2,   1, 75,   0,  0, 3,   0, {1, 2}, 8, Color_Leather}, // 127
-    {"& Large Leather Shield",          0x00000000L, TV_SHIELD,      ')', 0,    120,  3,   1, 100,  0,  0, 4,   0, {1, 2}, 15, Color_Leather}, // 128
-    {"& Small Metal Shield",            0x00000000L, TV_SHIELD,      ')', 0,    50,   4,   1, 65,   0,  0, 3,   0, {1, 2}, 10, Color_Iron}, // 129
-    {"& Medium Metal Shield",           0x00000000L, TV_SHIELD,      ')', 0,    125,  5,   1, 90,   0,  0, 4,   0, {1, 3}, 20, Color_Iron}, // 130
-    {"& Large Metal Shield",            0x00000000L, TV_SHIELD,      ')', 0,    200,  6,   1, 120,  0,  0, 5,   0, {1, 3}, 30, Color_Iron}, // 131
+    {"& Pair of Soft Leather Shoes",    0x00000000L, TV_BOOTS,       ']', ARMOR_MAX_CONDITION,    4,    1,   1, 5,    0,  0, 1,   0, {0, 0}, 1, Color_Leather}, // 91
+    {"& Pair of Soft Leather Boots",    0x00000000L, TV_BOOTS,       ']', ARMOR_MAX_CONDITION,    7,    2,   1, 20,   0,  0, 2,   0, {1, 1}, 4, Color_Leather}, // 92
+    {"& Pair of Hard Leather Boots",    0x00000000L, TV_BOOTS,       ']', ARMOR_MAX_CONDITION,    12,   3,   1, 40,   0,  0, 3,   0, {1, 1}, 6, Color_Leather}, // 93
+    {"& Soft Leather Cap",              0x00000000L, TV_HELM,        ']', ARMOR_MAX_CONDITION,    4,    1,   1, 10,   0,  0, 1,   0, {0, 0}, 2, Color_Leather}, // 94
+    {"& Hard Leather Cap",              0x00000000L, TV_HELM,        ']', ARMOR_MAX_CONDITION,    12,   2,   1, 15,   0,  0, 2,   0, {0, 0}, 4, Color_Leather}, // 95
+    {"& Metal Cap",                     0x00000000L, TV_HELM,        ']', ARMOR_MAX_CONDITION,    30,   3,   1, 20,   0,  0, 3,   0, {1, 1}, 7, Color_Iron}, // 96
+    {"& Iron Helm",                     0x00000000L, TV_HELM,        ']', ARMOR_MAX_CONDITION,    75,   4,   1, 75,   0,  0, 5,   0, {1, 3}, 20, Color_Iron}, // 97
+    {"& Steel Helm",                    0x00000000L, TV_HELM,        ']', ARMOR_MAX_CONDITION,    200,  5,   1, 60,   0,  0, 6,   0, {1, 3}, 40, Color_Steel}, // 98
+    {"& Silver Crown",                  0x00000000L, TV_HELM,        ']', ARMOR_MAX_CONDITION,    500,  6,   1, 20,   0,  0, 0,   0, {1, 1}, 44, Color_Silver}, // 99
+    {"& Golden Crown",                  0x00000000L, TV_HELM,        ']', ARMOR_MAX_CONDITION,    1000, 7,   1, 30,   0,  0, 0,   0, {1, 2}, 47, Color_Gold}, // 100
+    {"& Jewel-Encrusted Crown",         0x00000000L, TV_HELM,        ']', ARMOR_MAX_CONDITION,    2000, 8,   1, 40,   0,  0, 0,   0, {1, 3}, 50, Color_Amethyst}, // 101
+    {"& Robe",                          0x00000000L, TV_SOFT_ARMOR,  '(', ARMOR_MAX_CONDITION,    4,    1,   1, 20,   0,  0, 2,   0, {0, 0}, 1, Color_Dark_Blue}, // 102
+    {"Soft Leather Armor",              0x00000000L, TV_SOFT_ARMOR,  '(', ARMOR_MAX_CONDITION,    18,   2,   1, 80,   0,  0, 4,   0, {0, 0}, 2, Color_Leather}, // 103
+    {"Soft Studded Leather",            0x00000000L, TV_SOFT_ARMOR,  '(', ARMOR_MAX_CONDITION,    35,   3,   1, 90,   0,  0, 5,   0, {1, 1}, 3, Color_Leather}, // 104
+    {"Hard Leather Armor",              0x00000000L, TV_SOFT_ARMOR,  '(', ARMOR_MAX_CONDITION,    55,   4,   1, 100, -1,  0, 6,   0, {1, 1}, 5, Color_Leather}, // 105
+    {"Hard Studded Leather",            0x00000000L, TV_SOFT_ARMOR,  '(', ARMOR_MAX_CONDITION,    100,  5,   1, 110, -1,  0, 7,   0, {1, 2}, 7, Color_Leather}, // 106
+    {"Woven Cord Armor",                0x00000000L, TV_SOFT_ARMOR,  '(', ARMOR_MAX_CONDITION,    45,   6,   1, 150, -1,  0, 6,   0, {0, 0}, 7, Color_Cord}, // 107
+    {"Soft Leather Ring Mail",          0x00000000L, TV_SOFT_ARMOR,  '(', ARMOR_MAX_CONDITION,    160,  7,   1, 130, -1,  0, 6,   0, {1, 2}, 10, Color_Leather}, // 108
+    {"Hard Leather Ring Mail",          0x00000000L, TV_SOFT_ARMOR,  '(', ARMOR_MAX_CONDITION,    230,  8,   1, 150, -2,  0, 8,   0, {1, 3}, 12, Color_Leather}, // 109
+    {"Leather Scale Mail",              0x00000000L, TV_SOFT_ARMOR,  '(', ARMOR_MAX_CONDITION,    330,  9,   1, 140, -1,  0, 11,  0, {1, 1}, 14, Color_Leather}, // 110
+    {"Metal Scale Mail",                0x00000000L, TV_HARD_ARMOR,  '[', ARMOR_MAX_CONDITION,    430,  1,   1, 250, -2,  0, 13,  0, {1, 4}, 24, Color_Iron}, // 111
+    {"Chain Mail",                      0x00000000L, TV_HARD_ARMOR,  '[', ARMOR_MAX_CONDITION,    530,  2,   1, 220, -2,  0, 14,  0, {1, 4}, 26, Color_Iron}, // 112
+    {"Rusty Chain Mail",                0x00000000L, TV_HARD_ARMOR,  '[', ARMOR_MAX_CONDITION,    0,    3,   1, 220, -5,  0, 14, -8, {1, 4}, 26, Color_Rusty}, // 113
+    {"Double Chain Mail",               0x00000000L, TV_HARD_ARMOR,  '[', ARMOR_MAX_CONDITION,    630,  4,   1, 260, -2,  0, 15,  0, {1, 4}, 28, Color_Iron}, // 114
+    {"Augmented Chain Mail",            0x00000000L, TV_HARD_ARMOR,  '[', ARMOR_MAX_CONDITION,    675,  5,   1, 270, -2,  0, 16,  0, {1, 4}, 30, Color_Iron}, // 115
+    {"Bar Chain Mail",                  0x00000000L, TV_HARD_ARMOR,  '[', ARMOR_MAX_CONDITION,    720,  6,   1, 280, -2,  0, 18,  0, {1, 4}, 34, Color_Iron}, // 116
+    {"Metal Brigandine Armor",          0x00000000L, TV_HARD_ARMOR,  '[', ARMOR_MAX_CONDITION,    775,  7,   1, 290, -3,  0, 19,  0, {1, 4}, 36, Color_Steel}, // 117
+    {"Laminated Armor",                 0x00000000L, TV_HARD_ARMOR,  '[', ARMOR_MAX_CONDITION,    825,  8,   1, 300, -3,  0, 20,  0, {1, 4}, 38, Color_Steel}, // 118
+    {"Partial Plate Armor",             0x00000000L, TV_HARD_ARMOR,  '[', ARMOR_MAX_CONDITION,    900,  9,   1, 320, -3,  0, 22,  0, {1, 6}, 42, Color_Steel}, // 119
+    {"Metal Lamellar Armor",            0x00000000L, TV_HARD_ARMOR,  '[', ARMOR_MAX_CONDITION,    950,  10,  1, 340, -3,  0, 23,  0, {1, 6}, 44, Color_Steel}, // 120
+    {"Full Plate Armor",                0x00000000L, TV_HARD_ARMOR,  '[', ARMOR_MAX_CONDITION,    1050, 11,  1, 380, -3,  0, 25,  0, {2, 4}, 48, Color_Silver}, // 121
+    {"Ribbed Plate Armor",              0x00000000L, TV_HARD_ARMOR,  '[', ARMOR_MAX_CONDITION,    1200, 12,  1, 380, -3,  0, 28,  0, {2, 4}, 50, Color_Silver}, // 122
+    {"& Cloak",                         0x00000000L, TV_CLOAK,       '(', ARMOR_MAX_CONDITION,    3,    1,   1, 10,   0,  0, 1,   0, {0, 0}, 1, Color_Dark_Green}, // 123
+    {"& Set of Leather Gloves",         0x00000000L, TV_GLOVES,      ']', ARMOR_MAX_CONDITION,    3,    1,   1, 5,    0,  0, 1,   0, {0, 0}, 1, Color_Leather}, // 124
+    {"& Set of Gauntlets",              0x00000000L, TV_GLOVES,      ']', ARMOR_MAX_CONDITION,    35,   2,   1, 25,   0,  0, 2,   0, {1, 1}, 12, Color_Iron}, // 125
+    {"& Small Leather Shield",          0x00000000L, TV_SHIELD,      ')', ARMOR_MAX_CONDITION,    30,   1,   1, 50,   0,  0, 2,   0, {1, 1}, 3, Color_Leather}, // 126
+    {"& Medium Leather Shield",         0x00000000L, TV_SHIELD,      ')', ARMOR_MAX_CONDITION,    60,   2,   1, 75,   0,  0, 3,   0, {1, 2}, 8, Color_Leather}, // 127
+    {"& Large Leather Shield",          0x00000000L, TV_SHIELD,      ')', ARMOR_MAX_CONDITION,    120,  3,   1, 100,  0,  0, 4,   0, {1, 2}, 15, Color_Leather}, // 128
+    {"& Small Metal Shield",            0x00000000L, TV_SHIELD,      ')', ARMOR_MAX_CONDITION,    50,   4,   1, 65,   0,  0, 3,   0, {1, 2}, 10, Color_Iron}, // 129
+    {"& Medium Metal Shield",           0x00000000L, TV_SHIELD,      ')', ARMOR_MAX_CONDITION,    125,  5,   1, 90,   0,  0, 4,   0, {1, 3}, 20, Color_Iron}, // 130
+    {"& Large Metal Shield",            0x00000000L, TV_SHIELD,      ')', ARMOR_MAX_CONDITION,    200,  6,   1, 120,  0,  0, 5,   0, {1, 3}, 30, Color_Iron}, // 131
     {"Strength",                        0x00000001L, TV_RING,        '=', 0,    400,  0,   1, 2,    0,  0, 0,   0, {0, 0}, 30, Color_Gold}, // 132
     {"Dexterity",                       0x00000008L, TV_RING,        '=', 0,    400,  1,   1, 2,    0,  0, 0,   0, {0, 0}, 30, Color_Gold}, // 133
     {"Constitution",                    0x00000010L, TV_RING,        '=', 0,    400,  2,   1, 2,    0,  0, 0,   0, {0, 0}, 30, Color_Gold}, // 134

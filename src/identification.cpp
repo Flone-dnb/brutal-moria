@@ -13,6 +13,37 @@ char magic_item_titles[MAX_TITLES][10];
 // Identified objects flags
 uint8_t objects_identified[OBJECT_IDENT_SIZE];
 
+const char *getArmorConditionName(int16_t misc_use) {
+    const auto percent = static_cast<float>(misc_use) / static_cast<float>(ARMOR_MAX_CONDITION) * 100.0F;
+
+    if (percent > 80.0F) {
+        return "perfect";
+    } else if (percent > 60.0F) {
+        return "fine";
+    } else if (percent > 40.0F) {
+        return "slightly damaged";
+    } else if (percent > 20.0F) {
+        return "damaged";
+    }
+
+    return "badly damaged";
+}
+
+bool isArmor(uint8_t category_id) {
+    switch (category_id) {
+        case TV_BOOTS:
+        case TV_GLOVES:
+        case TV_CLOAK:
+        case TV_HELM:
+        case TV_SHIELD:
+        case TV_HARD_ARMOR:
+        case TV_SOFT_ARMOR:
+            return true;
+        default:
+            return false;
+    }
+}
+
 static const char *objectDescription(char command) {
     // every printing ASCII character is listed here, in the
     // order in which they appear in the ASCII character set.
@@ -547,7 +578,7 @@ enum class ItemMiscUse {
 // The `add_prefix` param indicates that an article must be added.
 // Note that since out_val can easily exceed 80 characters, itemDescription
 // must always be called with a obj_desc_t as the first parameter.
-void itemDescription(obj_desc_t description, Inventory_t const &item, bool add_prefix) {
+void itemDescription(obj_desc_t description, Inventory_t const &item, bool add_prefix, bool add_condition) {
     int indexx = item.sub_category_id & (ITEM_SINGLE_STACK_MIN - 1);
 
     // base name, modifier string
@@ -785,6 +816,14 @@ void itemDescription(obj_desc_t description, Inventory_t const &item, bool add_p
         // originally used %+d, but several machines don't support it
         (void) snprintf(tmp_str, 80, " (AC %c%d)", (item.to_ac < 0) ? '-' : '+', abs_to_ac);
         (void) strcat(tmp_val, tmp_str);
+    }
+
+    if (add_condition) {
+        // Add condition text.
+        if (isArmor(item.category_id)) {
+            (void) snprintf(tmp_str, 80, " (%s)", getArmorConditionName(item.misc_use));
+            (void) strcat(tmp_val, tmp_str);
+        }
     }
 
     // override defaults, check for `misc_type` flags in the `item.identification` field
