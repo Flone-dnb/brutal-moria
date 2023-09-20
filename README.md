@@ -13,13 +13,10 @@ This fork brings the following changes:
 - Gameplay
     - Your inventory/equipment/gold weight now affects how fast you feel hunger.
 - Items
-    - "Wooden Torch" now burns out after 1250 turns (4000 in original).
-    - "Brass Lantern" now burns out after 3000 turns (7500 in original).
-    - Potion of Poison now lasts much longer.
-    - Potion of Confusion now lasts longer.
-    - Potion of Sleep now lasts slightly longer.
+    - Light items (Torch, Lantern, Flask of Oil) are now more expensive and have less "capacity" (turns).
+    - Potions of Poison/Confusion/Sleep now last longer.
 - Misc
-    - All prices are 50% higher compared to original.
+    - All prices are 50% higher compared to the original.
 
 # The Dungeons of Moria
 
