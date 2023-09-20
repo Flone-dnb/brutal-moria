@@ -27,7 +27,7 @@ constexpr uint8_t ITEM_GROUP_MAX = 255;
 constexpr uint8_t INSCRIP_SIZE = 13;
 
 // How much hits an armor piece can take before breaking and disappearing.
-constexpr int16_t ARMOR_MAX_CONDITION = 5;
+constexpr int16_t ARMOR_MAX_CONDITION = 2000;
 
 // Inventory_t is created for an item the player may wear about
 // their person, or store in their inventory pack.
