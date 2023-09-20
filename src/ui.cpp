@@ -224,7 +224,7 @@ static void printHeaderNumber(const char *header, int num, Coord_t coord, int co
 // Print header and 2 numbers at given row, column -RAK-
 static void printHeaderNumberPair(const char *header, int num1, int num2, Coord_t coord, int color = -1) {
     vtype_t str = {'\0'};
-    (void) snprintf(str, 80, "%s: ", header);
+    (void) snprintf(str, 80, "%s:", header);
     putString(str, coord);
 
     vtype_t nums_str = {'\0'};
@@ -233,9 +233,9 @@ static void printHeaderNumberPair(const char *header, int num1, int num2, Coord_
     int size = 0;
     while (header[size] != '\0')
         size++;
-    Coord_t num_coord{coord.y, coord.x + size + 2};
+    Coord_t num_coord{coord.y, coord.x + size + 1};
     vtype_t num_str = {'\0'};
-    (void) snprintf(num_str, 80, "%6s", nums_str);
+    (void) snprintf(num_str, 80, "%7s", nums_str);
     putString(num_str, num_coord, color);
 }
 
@@ -245,7 +245,7 @@ static void printNumberPair(int num1, int num2, Coord_t coord, int color = -1) {
     (void) snprintf(nums_str, 80, "%d/%d", num1, num2);
 
     vtype_t str = {'\0'};
-    (void) snprintf(str, 80, "%6s", nums_str);
+    (void) snprintf(str, 80, "%7s", nums_str);
     putString(str, coord, color);
 }
 
@@ -300,12 +300,12 @@ int currentHitPointsColor() {
 
 // Prints Max hit points -RAK-
 void printCharacterMaxHitPoints() {
-    printNumberPair(py.misc.current_hp, py.misc.max_hp, Coord_t{16, STAT_COLUMN + 6}, currentHitPointsColor());
+    printNumberPair(py.misc.current_hp, py.misc.max_hp, Coord_t{16, STAT_COLUMN + 5}, currentHitPointsColor());
 }
 
 // Prints players current hit points -RAK-
 void printCharacterCurrentHitPoints() {
-    printNumberPair(py.misc.current_hp, py.misc.max_hp, Coord_t{16, STAT_COLUMN + 6}, currentHitPointsColor());
+    printNumberPair(py.misc.current_hp, py.misc.max_hp, Coord_t{16, STAT_COLUMN + 5}, currentHitPointsColor());
 }
 
 // Color for current experience -ATW-
