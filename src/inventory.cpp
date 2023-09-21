@@ -446,13 +446,8 @@ static bool damageMinusAC(uint32_t typ_dam) {
 
 /* JCW
    Returns the store/inventory/equipment colour for any given item.
-   "knowall" is used because items in the store don't seem to be given the
-   full set of "player has identified..." flags (because we know player
-   has "identified" everything in the store)... so pass in TRUE for store
-   calls, and FALSE if you don't want to tip off the player to the fact
-   that an item in his/her inventory is magical!
 */
-int itemColor(Inventory_t *item, bool know_all) {
+int itemColor(Inventory_t *item) {
     int type = item->category_id;
 
     /* before anything else, check if its damned */
@@ -498,12 +493,6 @@ int itemColor(Inventory_t *item, bool know_all) {
 
     if (type == TV_MAGIC_BOOK || type == TV_PRAYER_BOOK) {
         return Color_Inventory_Book;
-    }
-
-    if (!know_all) { /* Do we check if player knows about the enchantment? */
-        if ((!(item->identification & config::identification::ID_KNOWN2))) {
-            return Color_Inventory_Misc;
-        }
     }
 
     /* Cursed armour/weapon items are red */

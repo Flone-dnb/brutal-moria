@@ -141,7 +141,7 @@ static void displayStoreInventory(Store_t &store, int item_pos_start) {
         item.items_count = (uint8_t) current_item_count;
 
         // Generate item color.
-        int color = itemColor(&item, true);
+        int color = itemColor(&item);
 
         // Restore item's identification.
         item.identification = item_identification;
@@ -863,7 +863,8 @@ static bool storePurchaseAnItem(int store_id, int &current_top_item_id) {
 
             // Clear any identification of this item before placing it in player's inventory
             // because stores should sell unidentified items.
-            sell_item.identification = 0;
+            sell_item.identification &= ~config::identification::ID_KNOWN2;
+            sell_item.identification &= ~config::identification::ID_STORE_BOUGHT;
 
             int new_item_id = inventoryCarryItem(sell_item);
             int saved_store_counter = store.unique_items_counter;

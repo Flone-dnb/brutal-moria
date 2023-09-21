@@ -73,7 +73,7 @@ int displayInventoryItems(int itemIdStart, int itemIdEnd, bool weighted, int col
             continue;
         }
 
-        int color = itemColor(&py.inventory[i], false);
+        int color = itemColor(&py.inventory[i]);
 
         // don't need first two spaces if in first column
         if (column == 0) {
@@ -218,7 +218,7 @@ int displayEquipment(bool showWeights, int column) {
             continue;
         }
 
-        int color = itemColor(&py.inventory[i], false);
+        int color = itemColor(&py.inventory[i]);
 
         // don't need first two spaces when using whole screen
         if (column == 0) {

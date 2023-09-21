@@ -95,7 +95,7 @@ bool inventoryItemStackable(Inventory_t const &item);
 
 bool inventoryItemIsCursed(const Inventory_t &item);
 void inventoryItemRemoveCurse(Inventory_t &item);
-int itemColor(Inventory_t *item, bool know_all);
+int itemColor(Inventory_t *item);
 
 bool setNull(Inventory_t *item);
 bool setFrostDestroyableItems(Inventory_t *item);
