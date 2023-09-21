@@ -12,7 +12,6 @@ This fork brings the following changes:
     - `Look` command now also displays approximated health of a creature, for example: `You see a Large Brown Snake (looks wounded).`.
 - Gameplay
     - Your inventory/equipment/gold weight now affects how fast you feel hunger.
-    - Store items are no longer identified, their identification is now based on character's knowledge.
     - Condition of the armor your character is wearing will now degrade when you take a hit and at some point your armor will break into pieces and disappear. Armor condition is displayed in its description.
 - Items
     - Light items (Torch, Lantern, Flask of Oil) are now more expensive and have less "capacity" (turns).

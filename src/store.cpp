@@ -125,15 +125,6 @@ static void displayStoreInventory(Store_t &store, int item_pos_start) {
 
         obj_desc_t description = {'\0'};
 
-        // Clear store item identification to get its description
-        // from player's known (identified) items
-        // because stores should sell unidentified items.
-        const auto item_identification = item.identification;
-
-        // Remove identification from description/color because stores should sell unidentified items.
-        item.identification &= ~config::identification::ID_KNOWN2;
-        item.identification &= ~config::identification::ID_STORE_BOUGHT;
-
         // Generate item description.
         itemDescription(description, item, true);
 
@@ -142,9 +133,6 @@ static void displayStoreInventory(Store_t &store, int item_pos_start) {
 
         // Generate item color.
         int color = itemColor(&item);
-
-        // Restore item's identification.
-        item.identification = item_identification;
 
         obj_desc_t msg = {'\0'};
         (void) snprintf(msg, 160, "%c) %s", 'a' + item_line_num, description);
@@ -860,11 +848,6 @@ static bool storePurchaseAnItem(int store_id, int &current_top_item_id) {
             printSpeechFinishedHaggling();
             storeDecreaseInsults(store_id);
             py.misc.au -= price;
-
-            // Clear any identification of this item before placing it in player's inventory
-            // because stores should sell unidentified items.
-            sell_item.identification &= ~config::identification::ID_KNOWN2;
-            sell_item.identification &= ~config::identification::ID_STORE_BOUGHT;
 
             int new_item_id = inventoryCarryItem(sell_item);
             int saved_store_counter = store.unique_items_counter;
