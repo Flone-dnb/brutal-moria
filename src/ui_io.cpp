@@ -208,9 +208,11 @@ void putString(const char *out_str, Coord_t coord, int color) {
     str[79 - coord.x] = '\0';
 
     color = setColor(color);
+
     if (mvaddstr(coord.y, coord.x, str) == ERR) {
         abort();
     }
+
     clearColor(color);
 }
 
@@ -223,6 +225,14 @@ void putStringClearToEOL(const std::string &str, Coord_t coord, int color) {
     (void) move(coord.y, coord.x);
     clrtoeol();
     putString(str.c_str(), coord, color);
+}
+
+void putFlyingString(const std::string &str, Coord_t coord, int color) {
+    for (size_t i = 0; i < str.size(); i++) {
+        auto currentCoord = coord;
+        currentCoord.x += i;
+        panelPutTile(str[i], color, currentCoord);
+    }
 }
 
 // Clears given line of text -RAK-
@@ -387,12 +397,21 @@ void printMessageNoCommandInterrupt(const std::string &msg) {
 // This silently consumes ^R to redraw the screen and reset the
 // terminal, so that this operation can always be performed at
 // any input prompt. getKeyInput() never returns ^R.
-char getKeyInput() {
+char getKeyInput(int timeout_ms) {
     putQIO();               // Dump IO buffer
     game.command_count = 0; // Just to be safe -CJS-
 
     while (true) {
+        // Switch between blocking input and an input with a timeout.
+        timeout(timeout_ms > 0 ? timeout_ms : -1);
+
+        // Wait for input.
         int ch = getch();
+
+        if (timeout_ms > 0 && ch == ERR) {
+            // Probably reached timeout.
+            return CHAR_MIN;
+        }
 
         // some machines may not sign extend.
         if (ch == EOF) {

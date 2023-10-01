@@ -7,6 +7,8 @@
 
 #include "headers.h"
 
+#include <algorithm>
+
 static void playDungeon();
 
 static void initializeCharacterInventory();
@@ -1028,6 +1030,58 @@ static char parseAlternateCtrlInput(char last_input_command) {
     return last_input_command;
 }
 
+/**
+ * Moves flying messages (if they need to be moved now).
+ *
+ * @return `0` if there are no flying messages to process, otherwise
+ * time in milliseconds before a message should be updated.
+ */
+static int processFlyingMessages() {
+    // See if we have some flying messages to process.
+    if (game.vFlyingMessages.empty()) {
+        return 0;
+    }
+
+    using namespace std::chrono;
+
+    // Prepare some variables.
+    int iTimeToSoonestMessageUpdateMs = INT_MAX;
+
+    // Go through each flying message.
+    for (auto it = game.vFlyingMessages.begin(); it != game.vFlyingMessages.end();) {
+        // Prepare some variables.
+        auto &message = *it;
+        int iTimeUntilUpdateMs = 0;
+
+        // See if we need to move (update) the message.
+        const auto iTimePassedSinceLastUpdateMs = duration_cast<milliseconds>(steady_clock::now() - message->lastUpdateTime).count();
+        if (iTimePassedSinceLastUpdateMs >= FLYING_MESSAGE_UPDATE_INTERVAL_MS) {
+            // Update message.
+            const auto bRemoveMessage = !message->update();
+
+            if (bRemoveMessage) {
+                it = game.vFlyingMessages.erase(it);
+                continue;
+            }
+
+            iTimeUntilUpdateMs = FLYING_MESSAGE_UPDATE_INTERVAL_MS;
+        } else {
+            // Don't update the message, just save time until update.
+            iTimeUntilUpdateMs = static_cast<int>(FLYING_MESSAGE_UPDATE_INTERVAL_MS - iTimePassedSinceLastUpdateMs);
+        }
+
+        // See if time until updating this message is the smallest one.
+        if (iTimeUntilUpdateMs < iTimeToSoonestMessageUpdateMs) {
+            iTimeToSoonestMessageUpdateMs = iTimeUntilUpdateMs;
+        }
+
+        // Go to next message.
+        ++it;
+    }
+
+    return game.vFlyingMessages.empty() ? 0 : iTimeToSoonestMessageUpdateMs;
+}
+
 // Accept a command and execute it
 static void executeInputCommands(char &command, int &find_count) {
     char last_input_command = command;
@@ -1066,7 +1120,21 @@ static void executeInputCommands(char &command, int &find_count) {
         if (game.command_count > 0) {
             game.use_last_direction = true;
         } else {
-            last_input_command = getKeyInput();
+            int iTimeoutInMs = processFlyingMessages();
+
+            do {
+                // Get input.
+                const auto receivedInput = getKeyInput(iTimeoutInMs);
+
+                if (iTimeoutInMs > 0 && receivedInput == CHAR_MIN) {
+                    // Timeout reached (no real input).
+                    iTimeoutInMs = processFlyingMessages();
+                } else {
+                    // Received real input.
+                    last_input_command = receivedInput;
+                    break;
+                }
+            } while (true);
 
             // Get a count for a command.
             int repeat_count = 0;

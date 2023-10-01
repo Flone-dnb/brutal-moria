@@ -68,6 +68,7 @@ extern Monster_t blank_monster;
 extern int16_t next_free_monster_id;
 extern int16_t monster_multiply_total;
 
+const char *getMonsterHpStateDescription(int monster_id);
 bool monsterIsVisible(Monster_t const &monster);
 void monsterUpdateVisibility(int monster_id);
 bool monsterMultiply(Coord_t coord, int creature_id, int monster_id);

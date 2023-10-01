@@ -7,6 +7,8 @@
 
 #include "headers.h"
 
+#include <algorithm>
+
 // A horrible hack, needed because compactMonsters() is called from deep
 // within updateMonsters() via monsterPlaceNew() and monsterSummon().
 int hack_monptr = -1;
@@ -368,7 +370,7 @@ static void monsterConfuseOnAttack(Creature_t const &creature, Monster_t &monste
             if (monster.confused_amount != 0u) {
                 monster.confused_amount += 3;
             } else {
-                monster.confused_amount = (uint8_t)(2 + randomNumber(16));
+                monster.confused_amount = (uint8_t) (2 + randomNumber(16));
             }
         }
 
@@ -463,6 +465,13 @@ static void monsterAttackPlayer(int monster_id) {
                 vtype_t description = {'\0'};
                 (void) strcpy(description, name);
                 printMessage(strcat(description, "misses you."));
+
+                // Prepare to show a flying message.
+                const auto iMessageHorizontalDirection = std::clamp(py.pos.x - monster.pos.x, -1, 1);
+                const auto iMessageVerticalDirection = std::clamp(py.pos.y - monster.pos.x, -1, 1);
+
+                // Create a new message.
+                game.vFlyingMessages.push_back(FlyingMessage::create("miss", py.pos.x, py.pos.y, iMessageHorizontalDirection, iMessageVerticalDirection, Color_Message_Miss));
             }
         }
 
@@ -514,7 +523,7 @@ static void monsterOpenDoor(Tile_t &tile, int16_t monster_hp, uint32_t move_bits
 
             // 50% chance of breaking door
             if (door_is_stuck) {
-                item.misc_use = (int16_t)(1 - randomNumber(2));
+                item.misc_use = (int16_t) (1 - randomNumber(2));
             }
             tile.feature_id = TILE_CORR_FLOOR;
             dungeonLiteSpot(coord);
@@ -530,7 +539,7 @@ static void monsterOpenDoor(Tile_t &tile, int16_t monster_hp, uint32_t move_bits
             inventoryItemCopyTo(config::dungeon::objects::OBJ_OPEN_DOOR, item);
 
             // 50% chance of breaking door
-            item.misc_use = (int16_t)(1 - randomNumber(2));
+            item.misc_use = (int16_t) (1 - randomNumber(2));
             tile.feature_id = TILE_CORR_FLOOR;
             dungeonLiteSpot(coord);
             printMessage("You hear a door burst open!");
@@ -704,14 +713,14 @@ void monsterExecuteCastingOfSpell(Monster_t &monster, int monster_id, int spell_
             if (playerSavingThrow()) {
                 printMessage("You resist the effects of the spell.");
             } else {
-                playerTakesHit(diceRoll(Dice_t{3, 8}), death_description);
+                playerTakesHit(diceRoll(Dice_t{3, 8}), death_description, monster.pos);
             }
             break;
         case 9: // Serious Wound
             if (playerSavingThrow()) {
                 printMessage("You resist the effects of the spell.");
             } else {
-                playerTakesHit(diceRoll(Dice_t{8, 8}), death_description);
+                playerTakesHit(diceRoll(Dice_t{8, 8}), death_description, monster.pos);
             }
             break;
         case 10: // Hold Person
@@ -722,7 +731,7 @@ void monsterExecuteCastingOfSpell(Monster_t &monster, int monster_id, int spell_
             } else if (py.flags.paralysis > 0) {
                 py.flags.paralysis += 2;
             } else {
-                py.flags.paralysis = (int16_t)(randomNumber(5) + 4);
+                py.flags.paralysis = (int16_t) (randomNumber(5) + 4);
             }
             break;
         case 11: // Cause Blindness
@@ -740,7 +749,7 @@ void monsterExecuteCastingOfSpell(Monster_t &monster, int monster_id, int spell_
             } else if (py.flags.confused > 0) {
                 py.flags.confused += 2;
             } else {
-                py.flags.confused = (int16_t)(randomNumber(5) + 3);
+                py.flags.confused = (int16_t) (randomNumber(5) + 3);
             }
             break;
         case 13: // Cause Fear
@@ -749,7 +758,7 @@ void monsterExecuteCastingOfSpell(Monster_t &monster, int monster_id, int spell_
             } else if (py.flags.afraid > 0) {
                 py.flags.afraid += 2;
             } else {
-                py.flags.afraid = (int16_t)(randomNumber(5) + 3);
+                py.flags.afraid = (int16_t) (randomNumber(5) + 3);
             }
             break;
         case 14: // Summon Monster
@@ -784,7 +793,7 @@ void monsterExecuteCastingOfSpell(Monster_t &monster, int monster_id, int spell_
             } else if (py.flags.slow > 0) {
                 py.flags.slow += 2;
             } else {
-                py.flags.slow = (int16_t)(randomNumber(5) + 3);
+                py.flags.slow = (int16_t) (randomNumber(5) + 3);
             }
             break;
         case 17: // Drain Mana
@@ -876,7 +885,7 @@ static bool monsterCastSpell(int monster_id) {
 
     // Extract all possible spells into spell_choice
     int spell_choice[30];
-    auto spell_flags = (uint32_t)(creature.spells & ~config::monsters::spells::CS_FREQ);
+    auto spell_flags = (uint32_t) (creature.spells & ~config::monsters::spells::CS_FREQ);
 
     int id = 0;
     while (spell_flags != 0) {
@@ -1357,7 +1366,7 @@ int monsterTakeHit(int monster_id, int damage) {
     monster.sleep_count = 0;
     monster.hp -= damage;
 
-    if (monster.hp >= 0) {
+    if (monster.hp > 0) {
         return -1;
     }
 
@@ -1366,13 +1375,13 @@ int monsterTakeHit(int monster_id, int damage) {
     Recall_t &memory = creature_recall[monster.creature_id];
 
     if ((py.flags.blind < 1 && monster.lit) || ((creature.movement & config::monsters::move::CM_WIN) != 0u)) {
-        auto tmp = (uint32_t)((memory.movement & config::monsters::move::CM_TREASURE) >> config::monsters::move::CM_TR_SHIFT);
+        auto tmp = (uint32_t) ((memory.movement & config::monsters::move::CM_TREASURE) >> config::monsters::move::CM_TR_SHIFT);
 
         if (tmp > ((treasure_flags & config::monsters::move::CM_TREASURE) >> config::monsters::move::CM_TR_SHIFT)) {
-            treasure_flags = (uint32_t)((treasure_flags & ~config::monsters::move::CM_TREASURE) | (tmp << config::monsters::move::CM_TR_SHIFT));
+            treasure_flags = (uint32_t) ((treasure_flags & ~config::monsters::move::CM_TREASURE) | (tmp << config::monsters::move::CM_TR_SHIFT));
         }
 
-        memory.movement = (uint32_t)((memory.movement & ~config::monsters::move::CM_TREASURE) | treasure_flags);
+        memory.movement = (uint32_t) ((memory.movement & ~config::monsters::move::CM_TREASURE) | treasure_flags);
 
         if (memory.kills < SHRT_MAX) {
             memory.kills++;
@@ -1543,14 +1552,16 @@ static bool executeAttackOnPlayer(uint8_t creature_level, int16_t &monster_hp, i
     int item_pos_end;
     int32_t gold;
 
+    Monster_t &monster = monsters[monster_id];
+
     switch (attack_type) {
         case 1: // Normal attack
             // round half-way case down
             damage -= ((py.misc.ac + py.misc.magical_ac) * damage) / 200;
-            playerTakesHit(damage, death_description);
+            playerTakesHit(damage, death_description, monster.pos);
             break;
         case 2: // Lose Strength
-            playerTakesHit(damage, death_description);
+            playerTakesHit(damage, death_description, monster.pos);
             if (py.flags.sustain_str) {
                 printMessage("You feel weaker for a moment, but it passes.");
             } else if (randomNumber(2) == 1) {
@@ -1561,7 +1572,7 @@ static bool executeAttackOnPlayer(uint8_t creature_level, int16_t &monster_hp, i
             }
             break;
         case 3: // Confusion attack
-            playerTakesHit(damage, death_description);
+            playerTakesHit(damage, death_description, monster.pos);
             if (randomNumber(2) == 1) {
                 if (py.flags.confused < 1) {
                     printMessage("You feel confused.");
@@ -1575,7 +1586,7 @@ static bool executeAttackOnPlayer(uint8_t creature_level, int16_t &monster_hp, i
             }
             break;
         case 4: // Fear attack
-            playerTakesHit(damage, death_description);
+            playerTakesHit(damage, death_description, monster.pos);
             if (playerSavingThrow()) {
                 printMessage("You resist the effects!");
             } else if (py.flags.afraid < 1) {
@@ -1605,10 +1616,10 @@ static bool executeAttackOnPlayer(uint8_t creature_level, int16_t &monster_hp, i
         case 9: // Corrosion attack
             printMessage("A stinging red gas swirls about you.");
             damageCorrodingGas(death_description);
-            playerTakesHit(damage, death_description);
+            playerTakesHit(damage, death_description, monster.pos);
             break;
         case 10: // Blindness attack
-            playerTakesHit(damage, death_description);
+            playerTakesHit(damage, death_description, monster.pos);
             if (py.flags.blind < 1) {
                 py.flags.blind += 10 + randomNumber((int) creature_level);
                 printMessage("Your eyes begin to sting.");
@@ -1618,14 +1629,14 @@ static bool executeAttackOnPlayer(uint8_t creature_level, int16_t &monster_hp, i
             }
             break;
         case 11: // Paralysis attack
-            playerTakesHit(damage, death_description);
+            playerTakesHit(damage, death_description, monster.pos);
             if (playerSavingThrow()) {
                 printMessage("You resist the effects!");
             } else if (py.flags.paralysis < 1) {
                 if (py.flags.free_action) {
                     printMessage("You are unaffected.");
                 } else {
-                    py.flags.paralysis = (int16_t)(randomNumber((int) creature_level) + 3);
+                    py.flags.paralysis = (int16_t) (randomNumber((int) creature_level) + 3);
                     printMessage("You are paralyzed.");
                 }
             } else {
@@ -1663,12 +1674,12 @@ static bool executeAttackOnPlayer(uint8_t creature_level, int16_t &monster_hp, i
             }
             break;
         case 14: // Poison
-            playerTakesHit(damage, death_description);
+            playerTakesHit(damage, death_description, monster.pos);
             printMessage("You feel very sick.");
             py.flags.poisoned += randomNumber((int) creature_level) + 5;
             break;
         case 15: // Lose dexterity
-            playerTakesHit(damage, death_description);
+            playerTakesHit(damage, death_description, monster.pos);
             if (py.flags.sustain_dex) {
                 printMessage("You feel clumsy for a moment, but it passes.");
             } else {
@@ -1677,7 +1688,7 @@ static bool executeAttackOnPlayer(uint8_t creature_level, int16_t &monster_hp, i
             }
             break;
         case 16: // Lose constitution
-            playerTakesHit(damage, death_description);
+            playerTakesHit(damage, death_description, monster.pos);
             if (py.flags.sustain_con) {
                 printMessage("Your body resists the effects of the disease.");
             } else {
@@ -1686,7 +1697,7 @@ static bool executeAttackOnPlayer(uint8_t creature_level, int16_t &monster_hp, i
             }
             break;
         case 17: // Lose intelligence
-            playerTakesHit(damage, death_description);
+            playerTakesHit(damage, death_description, monster.pos);
             printMessage("You have trouble thinking clearly.");
             if (py.flags.sustain_int) {
                 printMessage("But your mind quickly clears.");
@@ -1695,7 +1706,7 @@ static bool executeAttackOnPlayer(uint8_t creature_level, int16_t &monster_hp, i
             }
             break;
         case 18: // Lose wisdom
-            playerTakesHit(damage, death_description);
+            playerTakesHit(damage, death_description, monster.pos);
             if (py.flags.sustain_wis) {
                 printMessage("Your wisdom is sustained.");
             } else {
@@ -1742,4 +1753,11 @@ static bool executeAttackOnPlayer(uint8_t creature_level, int16_t &monster_hp, i
     }
 
     return noticed;
+}
+
+const char *getMonsterHpStateDescription(int monster_id) {
+    // Calculate monster HP percent.
+    const auto hpPercent = static_cast<float>(monsters[monster_id].hp) / static_cast<float>(maxDiceRoll(creatures_list[monsters[monster_id].creature_id].hit_die)) * 100.0F;
+
+    return hpPercent > 80.0F ? "perfect" : hpPercent > 60.0F ? "fine" : hpPercent > 40.0F ? "slightly wounded" : hpPercent > 20.0F ? "wounded" : "badly wounded";
 }

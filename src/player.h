@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <optional>
+
 enum PlayerClassLevelAdj {
     BTH,
     BTHB,
@@ -207,7 +209,7 @@ void playerAdjustBonusesForItem(Inventory_t const &item, int factor);
 void playerRecalculateBonuses();
 void playerTakeOff(int item_id, int pack_position_id);
 bool playerTestBeingHit(int base_to_hit, int level, int plus_to_hit, int armor_class, int attack_type_id);
-void playerTakesHit(int damage, const char *creature_name);
+void playerTakesHit(int damage, const char *creature_name, const std::optional<Coord_t> &damageSourceCoord = {});
 
 void playerSearch(Coord_t coord, int chance);
 

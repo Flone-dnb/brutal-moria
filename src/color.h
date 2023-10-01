@@ -244,6 +244,7 @@ typedef struct {
 #define Color_Magik Color_Green
 #define Color_Empty Color_Dark_Grey_High
 
+/* Inventory. */
 #define Color_Inventory_Book Color_Puce
 #define Color_Inventory_Food Color_Light_Orange
 #define Color_Inventory_Potion Color_Light_Purple
@@ -259,14 +260,20 @@ typedef struct {
 #define Color_Inventory_Misc Color_White
 #define Color_Inventory_Enchanted Color_Green // White
 
+/* Stairs. */
 #define Color_StaircaseUp Color_Green
 #define Color_StaircaseDown Color_Red
 
+/* Floor/walls. */
 #define Color_Wall Color_Light_Orange
 #define Color_Floor Color_Medium_Grey_High
 #define Color_Floor_Permanent_Lit Color_Brass
 #define Color_Floor_Temporary_Lit Color_Brass
 #define Color_Town_Floor Color_Light_Grey_Low
 #define Color_Town_Wall Color_Light_Orange
+
+/* Flying messages. */
+#define Color_Message_Hit Color_Red
+#define Color_Message_Miss Color_Medium_Grey_High
 
 #define Color_Default Color_White

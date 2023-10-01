@@ -5,6 +5,11 @@
 
 #pragma once
 
+#include <vector>
+#include <string>
+#include <chrono>
+#include <memory>
+
 constexpr uint8_t TREASURE_MAX_LEVELS = 50; // Maximum level of magic in dungeon
 
 // Note that the following constants are all related, if you change one, you
@@ -22,6 +27,9 @@ constexpr uint8_t LEVEL_MAX_OBJECTS = 175; // Max objects per level
 constexpr uint16_t NORMAL_TABLE_SIZE = 256;
 constexpr uint8_t NORMAL_TABLE_SD = 64; // the standard deviation for the table
 
+/** Time after which a flying message should be updated. */
+constexpr long FLYING_MESSAGE_UPDATE_INTERVAL_MS = 200;
+
 // Inventory command screen states.
 enum class Screen {
     Blank = 0,
@@ -32,7 +40,94 @@ enum class Screen {
     Wrong,
 };
 
+/** Message that fly (move) on the screen in a specific direction. */
+struct FlyingMessage {
+    FlyingMessage() = delete;
+
+    /** Clears message from the screen. */
+    ~FlyingMessage();
+
+    /**
+     * Creates a new flying message and displays it.
+     *
+     * @param sMessage                   Message to display.
+     * @param iCurrentHorizontalPosition X position where the message should be triggered (for example player position)
+     * in dungeon coordinates (not screen coordinates). This actual position where the message will be displayed will be slightly different.
+     * @param iCurrentVerticalPosition   Y position where the message should be triggered (for example player position)
+     * in dungeon coordinates (not screen coordinates). This actual position where the message will be displayed will be slightly different.
+     * @param iHorizontalDirection       `1` to move the message to the right, `-1` to the left and `0` to not move horizontally.
+     * @param iVerticalDirection         `1` to move the message up, `-1` to move it down and `0` to not move vertically.
+     * @param iColor                     Color of the message.
+     *
+     * @return Created message. Returning `unique_ptr` for easy "move" functions (which I don't have to implement
+     * myself) and to avoid running destructor logic multiple times.
+     */
+    static std::unique_ptr<FlyingMessage> create(const std::string &sMessage, int iCurrentHorizontalPosition, int iCurrentVerticalPosition, int iHorizontalDirection,
+                                                 int iVerticalDirection, int iColor);
+
+    /**
+     * Moves the message and displays it.
+     *
+     * @return `true` if the message was updated successfully, `false` if it can no longer be displayed.
+     */
+    bool update();
+
+    /** Clears message on the current position (replaced it with dungeon tiles). */
+    void clearMessageFromScreen();
+
+    /** Message to display and move. */
+    std::string sMessage;
+
+    /** Time when the message was created/moved. */
+    std::chrono::steady_clock::time_point lastUpdateTime;
+
+    /** `-1` if the message should move to the left, `1` if to the right, `0` if horizontal movement is not used. */
+    int iHorizontalDirection = 0;
+
+    /** `-1` if the message should move down, `1` if up, `0` if vertical movement is not used. */
+    int iVerticalDirection = 0;
+
+    /** Current horizontal position of the message in dungeon coordinates. */
+    int iCurrentHorizontalPosition = 0;
+
+    /** Current vertical position of the message in dungeon coordinates. */
+    int iCurrentVerticalPosition = 0;
+
+    /** Color of the message. */
+    int iMessageColor = 0;
+
+  private:
+    /**
+     * Initializes a flying message.
+     *
+     * @param sMessage                   Message to display.
+     * @param iCurrentHorizontalPosition Starting X position of the message in dungeon coordinates (not screen coordinates).
+     * @param iCurrentVerticalPosition   Starting Y position of the message in dungeon coordinates (not screen coordinates).
+     * @param iHorizontalDirection       `1` to move the message to the right, `-1` to the left and `0` to not move horizontally.
+     * @param iVerticalDirection         `-1` to move the message up, `1` to move it down and `0` to not move vertically.
+     * @param iColor                     Color of the message.
+     */
+    FlyingMessage(const std::string &sMessage, int iCurrentHorizontalPosition, int iCurrentVerticalPosition, int iHorizontalDirection, int iVerticalDirection, int iColor);
+
+    /**
+     * Looks if the message can fit in the screen according to its current position
+     * and cuts it and/or slightly moves if needed.
+     *
+     * @return `true` if message can still be displayed, `false` if the message can no longer be displayed.
+     */
+    bool adjustMessageToScreenBounds();
+
+    /**
+     * `true` if when last time we displayed the message at least 1 character of the message was displayed
+     * on screen, `false` if not.
+     */
+    bool bMessageFitInScreenLastUpdate = false;
+};
+
 typedef struct Game_t {
+    /** Messages that needs to be moved on the screen. */
+    std::vector<std::unique_ptr<FlyingMessage>> vFlyingMessages;
+
     uint32_t magic_seed = 0; // Seed for initializing magic items (Potions, Wands, Staves, Scrolls, etc.)
     uint32_t town_seed = 0;  // Seed for town generation
 

@@ -7,6 +7,8 @@
 
 #include "headers.h"
 
+#include <algorithm>
+
 // Player record for most player related info
 Player_t py = Player_t{};
 
@@ -639,11 +641,31 @@ bool playerTestBeingHit(int base_to_hit, int level, int plus_to_hit, int armor_c
 }
 
 // Decreases players hit points and sets game.character_is_dead flag if necessary -RAK-
-void playerTakesHit(int damage, const char *creature_name_label) {
+void playerTakesHit(int damage, const char *creature_name_label, const std::optional<Coord_t> &damageSourceCoord) {
     if (py.flags.invulnerability > 0) {
         damage = 0;
     }
     py.misc.current_hp -= damage;
+
+    if (damage > 0 && py.misc.current_hp > 0) {
+        // Show a flying message.
+        // Make the message move up by default, for example for starvation/poison/etc effects.
+        int iMessageHorizontalDirection = 0;
+        int iMessageVerticalDirection = -1;
+
+        if (damageSourceCoord.has_value()) {
+            // Make the message move against the damage source direction.
+            iMessageHorizontalDirection = std::clamp(py.pos.x - damageSourceCoord->x, -1, 1);
+            iMessageVerticalDirection = std::clamp(py.pos.y - damageSourceCoord->y, -1, 1);
+        }
+
+        // Calculate left HP percent.
+        const auto iHpPercent = static_cast<int>(static_cast<float>(py.misc.current_hp) / static_cast<float>(py.misc.max_hp) * 100.0F);
+
+        // Create a new message.
+        game.vFlyingMessages.push_back(
+            FlyingMessage::create("hit (HP: " + std::to_string(iHpPercent) + "%)", py.pos.x, py.pos.y, iMessageHorizontalDirection, iMessageVerticalDirection, Color_Message_Hit));
+    }
 
     // Update armor condition.
     for (int i = PlayerEquipment::Wield; i < PLAYER_INVENTORY_SIZE; i++) {
@@ -699,7 +721,7 @@ void playerTakesHit(int damage, const char *creature_name_label) {
         }
     }
 
-    if (py.misc.current_hp >= 0) {
+    if (py.misc.current_hp > 0) {
         printCharacterCurrentHitPoints();
         return;
     }
@@ -1206,17 +1228,81 @@ static void playerAttackMonster(Coord_t coord) {
     int damage;
     vtype_t msg = {'\0'};
 
+    // Save monster's health description for using it later (see below).
+    const auto sHpDescriptionBefore = getMonsterHpStateDescription(creature_id);
+
+    // Prepare variables to group multiple hits/misses.
+    unsigned int iMissCount = 0;
+    unsigned int iHitCount = 0;
+    const auto monsterPos = monster.pos; // in case it dies
+    const auto displayHitMiss = [&](unsigned int iHitCount, unsigned int iMissCount, bool bMonsterDead) {
+        // Prepare miss/hit count text.
+        std::string sHitCountText;
+        std::string sMissCountText;
+        if (iHitCount > 1) {
+            sHitCountText = " (x" + std::to_string(iHitCount) + ")";
+        }
+        if (iMissCount > 1) {
+            sMissCountText = " (x" + std::to_string(iMissCount) + ")";
+        }
+
+        vtype_t msg = {'\0'};
+
+        // Prepare to show a flying message.
+        const auto iMessageHorizontalDirection = std::clamp(monsterPos.x - py.pos.x, -1, 1);
+        const auto iMessageVerticalDirection = std::clamp(monsterPos.y - py.pos.y, -1, 1);
+        const auto sHpDescriptionAfter = getMonsterHpStateDescription(creature_id);
+
+        // See if we need to specify monster's new health description.
+        std::string sAdditionalDescription;
+        if (bMonsterDead) {
+            sAdditionalDescription = " (dead)";
+        } else if (sHpDescriptionBefore != sHpDescriptionAfter) {
+            sAdditionalDescription = std::string(" (") + sHpDescriptionAfter + ")";
+        }
+
+        // Display a floating message.
+        if (iMissCount > 0 && iHitCount > 0) {
+            // Create a new message.
+            game.vFlyingMessages.push_back(FlyingMessage::create("miss" + sMissCountText + " hit" + sHitCountText + sAdditionalDescription, monsterPos.x, monsterPos.y,
+                                                                 iMessageHorizontalDirection, iMessageVerticalDirection, Color_Message_Hit));
+        } else if (iMissCount > 0) {
+            // Create a new message.
+            game.vFlyingMessages.push_back(
+                FlyingMessage::create("miss" + sMissCountText, monsterPos.x, monsterPos.y, iMessageHorizontalDirection, iMessageVerticalDirection, Color_Message_Miss));
+        } else if (iHitCount > 0) {
+            // Create a new message.
+            game.vFlyingMessages.push_back(FlyingMessage::create("hit" + sHitCountText + sAdditionalDescription, monsterPos.x, monsterPos.y, iMessageHorizontalDirection,
+                                                                 iMessageVerticalDirection, Color_Message_Hit));
+        }
+
+        if (bMonsterDead) {
+            return;
+        }
+
+        // Display text in upper panel.
+        if (iMissCount > 0 && iHitCount > 0) {
+            (void) snprintf(msg, 80, ("You miss" + sMissCountText + " and hit" + sHitCountText + " %s.").c_str(), name);
+            printMessage(msg);
+            return;
+        } else if (iMissCount > 0) {
+            (void) snprintf(msg, 80, ("You miss" + sMissCountText + " %s.").c_str(), name);
+            printMessage(msg);
+        } else if (iHitCount > 0) {
+            (void) snprintf(msg, 80, ("You hit" + sHitCountText + " %s.").c_str(), name);
+            printMessage(msg);
+        }
+    };
+
     // Loop for number of blows, trying to hit the critter.
     // Note: blows will always be greater than 0 at the start of the loop -MRC-
     for (int i = blows; i > 0; i--) {
         if (!playerTestBeingHit(base_to_hit, (int) py.misc.level, total_to_hit, (int) creature.ac, PlayerClassLevelAdj::BTH)) {
-            (void) snprintf(msg, 80, "You miss %s.", name);
-            printMessage(msg);
+            iMissCount += 1;
             continue;
         }
 
-        (void) snprintf(msg, 80, "You hit %s.", name);
-        printMessage(msg);
+        iHitCount += 1;
 
         if (item.category_id != TV_NOTHING) {
             damage = diceRoll(item.damage);
@@ -1261,6 +1347,8 @@ static void playerAttackMonster(Coord_t coord) {
             printMessage(msg);
             displayCharacterExperience();
 
+            displayHitMiss(iHitCount, iMissCount, true);
+
             return;
         }
 
@@ -1278,6 +1366,8 @@ static void playerAttackMonster(Coord_t coord) {
             }
         }
     }
+
+    displayHitMiss(iHitCount, iMissCount, false);
 }
 
 static int16_t playerLockPickingSkill() {

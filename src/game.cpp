@@ -343,3 +343,130 @@ void abortProgram(const char *msg) {
 
     exit(0);
 }
+
+FlyingMessage::~FlyingMessage() {
+    clearMessageFromScreen();
+}
+
+std::unique_ptr<FlyingMessage> FlyingMessage::create(const std::string &sMessage, int iCurrentHorizontalPosition, int iCurrentVerticalPosition, int iHorizontalDirection,
+                                                     int iVerticalDirection, int iColor) {
+    // See if we should move to the left.
+    if (iHorizontalDirection < 0) {
+        // Adjust initial start position to include message length.
+        iCurrentHorizontalPosition -= sMessage.size();
+    } else if (iVerticalDirection != 0) {
+        // Adjust initial start position to be centered.
+        iCurrentHorizontalPosition -= sMessage.size() / 2;
+    }
+
+    // Create a new message.
+    auto pMessage =
+        std::unique_ptr<FlyingMessage>(new FlyingMessage(sMessage, iCurrentHorizontalPosition, iCurrentVerticalPosition, iHorizontalDirection, iVerticalDirection, iColor));
+
+    // Display it.
+    pMessage->update();
+
+    return pMessage;
+}
+
+bool FlyingMessage::update() {
+    // Clear previously displayed message (on old position).
+    clearMessageFromScreen();
+
+    // Move message.
+    constexpr int iMessageMoveHorizontalDistance = 2;
+    constexpr int iMessageMoveVerticalDistance = 1;
+    iCurrentHorizontalPosition += iHorizontalDirection * iMessageMoveHorizontalDistance;
+    iCurrentVerticalPosition += iVerticalDirection * iMessageMoveVerticalDistance;
+
+    // Adjust message to screen bounds.
+    if (!adjustMessageToScreenBounds()) {
+        bMessageFitInScreenLastUpdate = false;
+        return false;
+    } else {
+        bMessageFitInScreenLastUpdate = true;
+    }
+
+    // Display.
+    putFlyingString(sMessage, Coord_t{iCurrentVerticalPosition, iCurrentHorizontalPosition}, iMessageColor);
+
+    // Return cursor back to player.
+    panelMoveCursor(py.pos);
+
+    // Update time.
+    lastUpdateTime = std::chrono::steady_clock::now();
+
+    return true;
+}
+
+void FlyingMessage::clearMessageFromScreen() {
+    // Don't touch screen if current coordinates were out of bounds.
+    if (!bMessageFitInScreenLastUpdate) {
+        return;
+    }
+
+    // Replace message characters with dungeon tiles.
+    for (size_t i = 0; i < sMessage.size(); i++) {
+        Coord_t location;
+        location.y = iCurrentVerticalPosition;
+        location.x = iCurrentHorizontalPosition + i;
+        panelPutTile(caveGetTileSymbol(location), caveGetTileColor(location), location);
+    }
+
+    // Return cursor back to player.
+    panelMoveCursor(py.pos);
+}
+
+FlyingMessage::FlyingMessage(const std::string &sMessage, int iCurrentHorizontalPosition, int iCurrentVerticalPosition, int iHorizontalDirection, int iVerticalDirection,
+                             int iColor) {
+    this->sMessage = sMessage;
+    this->iCurrentHorizontalPosition = iCurrentHorizontalPosition;
+    this->iCurrentVerticalPosition = iCurrentVerticalPosition;
+    this->iHorizontalDirection = iHorizontalDirection;
+    this->iVerticalDirection = iVerticalDirection;
+    iMessageColor = iColor;
+
+    lastUpdateTime = std::chrono::steady_clock::now();
+}
+
+bool FlyingMessage::adjustMessageToScreenBounds() {
+    // Convert dungeon coordinates to screen coordinates.
+    const auto iXPosInScreen = iCurrentHorizontalPosition - dg.panel.col_prt;
+    const auto iYPosInScreen = iCurrentVerticalPosition - dg.panel.row_prt;
+    const auto iEndXPosInScreen = iXPosInScreen + static_cast<int>(sMessage.size()) + 1;
+
+    // Prepare screen bounds variables.
+    const auto leftPanelSizeX = 11;                             // magic number calculated from `ui.cpp`
+    const auto rightXBound = SCREEN_WIDTH + (SCREEN_WIDTH / 2); // magic number again
+    const auto topBound = MSG_LINE;
+    const auto bottomBound = SCREEN_HEIGHT;
+
+    // Check right/left bounds.
+    if (iEndXPosInScreen >= rightXBound) {
+        // The message hit right screen bound.
+        const auto iCharacterToEraseCount = static_cast<size_t>(iEndXPosInScreen - rightXBound);
+        if (iCharacterToEraseCount >= sMessage.size()) {
+            return false;
+        }
+        sMessage = sMessage.substr(0, sMessage.size() - iCharacterToEraseCount);
+        return true;
+    } else if (iXPosInScreen <= leftPanelSizeX) { // avoid overwriting stats panel
+        // The message hit left screen bound.
+        const auto iCharacterToEraseCount = static_cast<size_t>(leftPanelSizeX - iXPosInScreen);
+        if (iCharacterToEraseCount >= sMessage.size()) {
+            return false;
+        }
+        sMessage = sMessage.substr(0, sMessage.size() - iCharacterToEraseCount);
+        iCurrentHorizontalPosition += iCharacterToEraseCount + 1;
+    }
+
+    // Check up/down bounds.
+    if (iYPosInScreen <= topBound) {
+        return false;
+    } else if (iYPosInScreen >= bottomBound) {
+        return false;
+    }
+
+    // The message fully fits.
+    return true;
+}

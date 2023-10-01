@@ -7,6 +7,8 @@
 
 #include "headers.h"
 
+#include <algorithm>
+
 // Returns spell pointer -RAK-
 static bool spellGetId(int *spell_ids, int number_of_choices, int &spell_id, int &spell_chance, const char *prompt, int first_spell) {
     spell_id = -1;
@@ -263,11 +265,7 @@ bool spellDetectInvisibleCreaturesWithinVicinity() {
             monster.lit = true;
 
             // works correctly even if hallucinating
-            panelPutTile(
-                (char) creatures_list[monster.creature_id].sprite,
-                creatures_list[monster.creature_id].color,
-                Coord_t{monster.pos.y, monster.pos.x}
-            );
+            panelPutTile((char) creatures_list[monster.creature_id].sprite, creatures_list[monster.creature_id].color, Coord_t{monster.pos.y, monster.pos.x});
 
             detected = true;
         }
@@ -567,11 +565,7 @@ bool spellDetectMonsters() {
             detected = true;
 
             // works correctly even if hallucinating
-            panelPutTile(
-                (char) creatures_list[monster.creature_id].sprite,
-                creatures_list[monster.creature_id].color,
-                Coord_t{monster.pos.y, monster.pos.x}
-            );
+            panelPutTile((char) creatures_list[monster.creature_id].sprite, creatures_list[monster.creature_id].color, Coord_t{monster.pos.y, monster.pos.x});
         }
     }
 
@@ -798,14 +792,37 @@ static void spellFireBoltTouchesMonster(Tile_t &tile, int damage, int harm_type,
         }
     }
 
+    // Save monster's health description for using it later (see below).
+    const auto sHpDescriptionBefore = getMonsterHpStateDescription(tile.creature_id);
+    const auto monsterPos = monster.pos; // in case it dies
+
     auto name = monsterNameDescription(creature.name, monster.lit);
 
+    bool bMonsterDead = false;
     if (monsterTakeHit((int) tile.creature_id, damage) >= 0) {
         printMonsterActionText(name, "dies in a fit of agony.");
         displayCharacterExperience();
+        bMonsterDead = true;
     } else if (damage > 0) {
         printMonsterActionText(name, "screams in agony.");
     }
+
+    // Prepare to show a flying message.
+    const auto iMessageHorizontalDirection = std::clamp(monsterPos.x - py.pos.x, -1, 1);
+    const auto iMessageVerticalDirection = std::clamp(monsterPos.y - py.pos.y, -1, 1);
+    const auto sHpDescriptionAfter = getMonsterHpStateDescription(tile.creature_id);
+
+    // See if we need to specify monster's new health description.
+    std::string sAdditionalDescription;
+    if (bMonsterDead) {
+        sAdditionalDescription = " (dead)";
+    } else if (sHpDescriptionBefore != sHpDescriptionAfter) {
+        sAdditionalDescription = std::string(" (") + sHpDescriptionAfter + ")";
+    }
+
+    // Display a floating message.
+    game.vFlyingMessages.push_back(
+        FlyingMessage::create("hit" + sAdditionalDescription, monsterPos.x, monsterPos.y, iMessageHorizontalDirection, iMessageVerticalDirection, Color_Message_Hit));
 }
 
 // Get spell color - EMP -
@@ -1050,19 +1067,20 @@ void spellBreath(Coord_t coord, int monster_id, int damage_hp, int spell_type, c
 
                         // can not call monsterTakeHit here, since player does not
                         // get experience for kill
-                        monster.hp = (int16_t)(monster.hp - damage);
+                        monster.hp = (int16_t) (monster.hp - damage);
                         monster.sleep_count = 0;
 
                         if (monster.hp < 0) {
                             uint32_t treasure_id = monsterDeath(Coord_t{monster.pos.y, monster.pos.x}, creature.movement);
 
                             if (monster.lit) {
-                                auto tmp = (uint32_t)((creature_recall[monster.creature_id].movement & config::monsters::move::CM_TREASURE) >> config::monsters::move::CM_TR_SHIFT);
+                                auto tmp =
+                                    (uint32_t) ((creature_recall[monster.creature_id].movement & config::monsters::move::CM_TREASURE) >> config::monsters::move::CM_TR_SHIFT);
                                 if (tmp > ((treasure_id & config::monsters::move::CM_TREASURE) >> config::monsters::move::CM_TR_SHIFT)) {
-                                    treasure_id = (uint32_t)((treasure_id & ~config::monsters::move::CM_TREASURE) | (tmp << config::monsters::move::CM_TR_SHIFT));
+                                    treasure_id = (uint32_t) ((treasure_id & ~config::monsters::move::CM_TREASURE) | (tmp << config::monsters::move::CM_TR_SHIFT));
                                 }
                                 creature_recall[monster.creature_id].movement =
-                                    (uint32_t)(treasure_id | (creature_recall[monster.creature_id].movement & ~config::monsters::move::CM_TREASURE));
+                                    (uint32_t) (treasure_id | (creature_recall[monster.creature_id].movement & ~config::monsters::move::CM_TREASURE));
                             }
 
                             // It ate an already processed monster. Handle normally.
@@ -1343,7 +1361,7 @@ bool spellConfuseMonster(Coord_t coord, int direction) {
                 if (monster.confused_amount != 0u) {
                     monster.confused_amount += 3;
                 } else {
-                    monster.confused_amount = (uint8_t)(2 + randomNumber(16));
+                    monster.confused_amount = (uint8_t) (2 + randomNumber(16));
                 }
                 monster.sleep_count = 0;
 
@@ -1914,11 +1932,7 @@ bool spellDetectEvil() {
             detected = true;
 
             // works correctly even if hallucinating
-            panelPutTile(
-                (char) creatures_list[monster.creature_id].sprite,
-                creatures_list[monster.creature_id].color,
-                Coord_t{monster.pos.y, monster.pos.x}
-            );
+            panelPutTile((char) creatures_list[monster.creature_id].sprite, creatures_list[monster.creature_id].color, Coord_t{monster.pos.y, monster.pos.x});
         }
     }
 
@@ -2229,7 +2243,7 @@ void spellLoseEXP(int32_t adjustment) {
 // Slow Poison -RAK-
 bool spellSlowPoison() {
     if (py.flags.poisoned > 0) {
-        py.flags.poisoned = (int16_t)(py.flags.poisoned / 2);
+        py.flags.poisoned = (int16_t) (py.flags.poisoned / 2);
         if (py.flags.poisoned < 1) {
             py.flags.poisoned = 1;
         }
