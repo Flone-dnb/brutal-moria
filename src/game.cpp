@@ -436,10 +436,10 @@ bool FlyingMessage::adjustMessageToScreenBounds() {
     const auto iEndXPosInScreen = iXPosInScreen + static_cast<int>(sMessage.size()) + 1;
 
     // Prepare screen bounds variables.
-    const auto leftPanelSizeX = 11;                             // magic number calculated from `ui.cpp`
-    const auto rightXBound = SCREEN_WIDTH + (SCREEN_WIDTH / 2); // magic number again
+    const auto leftPanelSizeX = 12;                             // magic number calculated from `ui.cpp`
+    const auto rightXBound = SCREEN_WIDTH + (SCREEN_WIDTH / 3); // magic number again
     const auto topBound = MSG_LINE;
-    const auto bottomBound = SCREEN_HEIGHT;
+    const auto bottomBound = SCREEN_HEIGHT - 2;
 
     // Check right/left bounds.
     if (iEndXPosInScreen >= rightXBound) {
