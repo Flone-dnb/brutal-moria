@@ -10,7 +10,7 @@ This fork brings the following changes:
         - Instead of `a Small Metal Shield [3,+1]` we have `a Small Metal Shield AC 3+1`.
         - Instead of `a Small Sword 1d6 (+0,+1)` we have `a Small Sword 1d6 (HIT +0, DMG +1)`.
     - `Look` command now also displays approximated health of a creature, for example: `You see a Large Brown Snake (looks wounded).`.
-    - When your character hits a creature or a creature hits your character a "flying" message will appear in the direction of the attack with a very short description about the hit and HP just like in Cataclysm: Dark Days Ahead.
+    - When your character hits a creature or a creature hits your character a "flying" message will appear in the direction of the attack with the text of the damage dealt just like in Cataclysm: Dark Days Ahead.
 - Gameplay
     - Your inventory/equipment/gold weight now affects how fast you feel hunger.
     - Monsters spawn ~30% more often.

@@ -28,7 +28,7 @@ constexpr uint16_t NORMAL_TABLE_SIZE = 256;
 constexpr uint8_t NORMAL_TABLE_SD = 64; // the standard deviation for the table
 
 /** Time after which a flying message should be updated. */
-constexpr long FLYING_MESSAGE_UPDATE_INTERVAL_MS = 200;
+constexpr long FLYING_MESSAGE_UPDATE_INTERVAL_MS = 100;
 
 // Inventory command screen states.
 enum class Screen {

@@ -792,17 +792,13 @@ static void spellFireBoltTouchesMonster(Tile_t &tile, int damage, int harm_type,
         }
     }
 
-    // Save monster's health description for using it later (see below).
-    const auto sHpDescriptionBefore = getMonsterHpStateDescription(tile.creature_id);
     const auto monsterPos = monster.pos; // in case it dies
 
     auto name = monsterNameDescription(creature.name, monster.lit);
 
-    bool bMonsterDead = false;
     if (monsterTakeHit((int) tile.creature_id, damage) >= 0) {
         printMonsterActionText(name, "dies in a fit of agony.");
         displayCharacterExperience();
-        bMonsterDead = true;
     } else if (damage > 0) {
         printMonsterActionText(name, "screams in agony.");
     }
@@ -810,19 +806,10 @@ static void spellFireBoltTouchesMonster(Tile_t &tile, int damage, int harm_type,
     // Prepare to show a flying message.
     const auto iMessageHorizontalDirection = std::clamp(monsterPos.x - py.pos.x, -1, 1);
     const auto iMessageVerticalDirection = std::clamp(monsterPos.y - py.pos.y, -1, 1);
-    const auto sHpDescriptionAfter = getMonsterHpStateDescription(tile.creature_id);
-
-    // See if we need to specify monster's new health description.
-    std::string sAdditionalDescription;
-    if (bMonsterDead) {
-        sAdditionalDescription = " (dead)";
-    } else if (sHpDescriptionBefore != sHpDescriptionAfter) {
-        sAdditionalDescription = std::string(" (") + sHpDescriptionAfter + ")";
-    }
 
     // Display a floating message.
     game.vFlyingMessages.push_back(
-        FlyingMessage::create("hit" + sAdditionalDescription, monsterPos.x, monsterPos.y, iMessageHorizontalDirection, iMessageVerticalDirection, Color_Message_Hit));
+        FlyingMessage::create("-" + std::to_string(damage), monsterPos.x, monsterPos.y, iMessageHorizontalDirection, iMessageVerticalDirection, Color_Message_Hit));
 }
 
 // Get spell color - EMP -
