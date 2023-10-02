@@ -41,6 +41,13 @@ constexpr uint8_t BTH_PER_PLUS_TO_HIT_ADJUST = 3; // Adjust BTH per plus-to-hit
 
 constexpr uint8_t PLAYER_NAME_SIZE = 27;
 
+constexpr uint8_t PLAYER_STANCE_HEAD = 2;
+constexpr uint8_t PLAYER_STANCE_TORSO = 1;
+constexpr uint8_t PLAYER_STANCE_LEGS = 0;
+
+/** How much damage (percent) to remove from incoming damage if the attack is targeting protected body part. */
+constexpr uint8_t PLAYER_DAMAGE_PERCENT_STANCE = 30;
+
 // ClassRankTitle_t of the player: Novice, Mage (5th), Paladin, etc.
 // Currently only used by the `playerRankTitle()` function.
 // TODO: perhaps use a plain std::string instead?
@@ -49,45 +56,46 @@ typedef const char *ClassRankTitle_t;
 // Player_t contains everything to be known about our player character
 typedef struct Player_t {
     struct {
-        char name[PLAYER_NAME_SIZE];    // Name of character
-        bool gender;                    // Gender of character (Female = 0, Male = 1)
-        int32_t date_of_birth;          // Unix time for when the character was created
-        int32_t au;                     // Gold
-        int32_t max_exp;                // Max experience
-        int32_t exp;                    // Cur experience
-        uint16_t exp_fraction;          // Cur exp fraction * 2^16
-        uint16_t age;                   // Characters age
-        uint16_t height;                // Height
-        uint16_t weight;                // Weight
-        uint16_t level;                 // Level
-        uint16_t max_dungeon_depth;     // Max level explored
-        int16_t chance_in_search;       // Chance in search
-        int16_t fos;                    // Frequency of search
-        int16_t bth;                    // Base to hit
-        int16_t bth_with_bows;          // BTH with bows
-        int16_t mana;                   // Mana points
-        int16_t max_hp;                 // Max hit pts
-        int16_t plusses_to_hit;         // Plusses to hit
-        int16_t plusses_to_damage;      // Plusses to dam
-        int16_t ac;                     // Total AC
-        int16_t magical_ac;             // Magical AC
-        int16_t display_to_hit;         // Display +ToHit
-        int16_t display_to_damage;      // Display +ToDam
-        int16_t display_ac;             // Display +ToTAC
-        int16_t display_to_ac;          // Display +ToAC
-        int16_t disarm;                 // % to Disarm
-        int16_t saving_throw;           // Saving throw
-        int16_t social_class;           // Social Class
-        int16_t stealth_factor;         // Stealth factor
-        uint8_t class_id;               // # of class
-        uint8_t race_id;                // # of race
-        uint8_t hit_die;                // Char hit die
-        uint8_t experience_factor;      // Experience factor
-        int16_t current_mana;           // Current mana points
-        uint16_t current_mana_fraction; // Current mana fraction * 2^16
-        int16_t current_hp;             // Current hit points
-        uint16_t current_hp_fraction;   // Current hit points fraction * 2^16
-        char history[4][60];            // History record
+        char name[PLAYER_NAME_SIZE];          // Name of character
+        bool gender;                          // Gender of character (Female = 0, Male = 1)
+        int32_t date_of_birth;                // Unix time for when the character was created
+        int32_t au;                           // Gold
+        int32_t max_exp;                      // Max experience
+        int32_t exp;                          // Cur experience
+        uint16_t exp_fraction;                // Cur exp fraction * 2^16
+        uint16_t age;                         // Characters age
+        uint16_t height;                      // Height
+        uint16_t weight;                      // Weight
+        uint16_t level;                       // Level
+        uint16_t max_dungeon_depth;           // Max level explored
+        int16_t chance_in_search;             // Chance in search
+        int16_t fos;                          // Frequency of search
+        int16_t bth;                          // Base to hit
+        int16_t bth_with_bows;                // BTH with bows
+        int16_t mana;                         // Mana points
+        int16_t max_hp;                       // Max hit pts
+        int16_t plusses_to_hit;               // Plusses to hit
+        int16_t plusses_to_damage;            // Plusses to dam
+        int16_t ac;                           // Total AC
+        int16_t magical_ac;                   // Magical AC
+        int16_t display_to_hit;               // Display +ToHit
+        int16_t display_to_damage;            // Display +ToDam
+        int16_t display_ac;                   // Display +ToTAC
+        int16_t display_to_ac;                // Display +ToAC
+        int16_t disarm;                       // % to Disarm
+        int16_t saving_throw;                 // Saving throw
+        int16_t social_class;                 // Social Class
+        int16_t stealth_factor;               // Stealth factor
+        uint8_t class_id;                     // # of class
+        uint8_t race_id;                      // # of race
+        uint8_t hit_die;                      // Char hit die
+        uint8_t experience_factor;            // Experience factor
+        int16_t current_mana;                 // Current mana points
+        uint16_t current_mana_fraction;       // Current mana fraction * 2^16
+        int16_t current_hp;                   // Current hit points
+        uint16_t current_hp_fraction;         // Current hit points fraction * 2^16
+        uint8_t stance = PLAYER_STANCE_TORSO; // `1` for "prepared to block attack on torso", `2` for head and `0` for legs
+        char history[4][60];                  // History record
     } misc{};
 
     // Stats now kept in arrays, for more efficient access. -CJS-
@@ -209,7 +217,7 @@ void playerAdjustBonusesForItem(Inventory_t const &item, int factor);
 void playerRecalculateBonuses();
 void playerTakeOff(int item_id, int pack_position_id);
 bool playerTestBeingHit(int base_to_hit, int level, int plus_to_hit, int armor_class, int attack_type_id);
-void playerTakesHit(int damage, const char *creature_name, const std::optional<Coord_t> &damageSourceCoord = {});
+void playerTakesHit(int damage, const char *creature_name, const std::optional<Coord_t> &damageSourceCoord = {}, const std::optional<uint8_t> &attackedBodyPart = {});
 
 void playerSearch(Coord_t coord, int chance);
 
@@ -279,6 +287,7 @@ int16_t playerToHitAdjustment();
 int16_t playerArmorClassAdjustment();
 int16_t playerDisarmAdjustment();
 int16_t playerDamageAdjustment();
+int getPlayerColor();
 
 // player_throw.cpp
 void playerThrowItem();

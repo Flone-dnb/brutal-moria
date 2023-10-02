@@ -8,6 +8,7 @@
 #include "headers.h"
 
 #include <algorithm>
+#include <cmath>
 
 // Player record for most player related info
 Player_t py = Player_t{};
@@ -641,13 +642,29 @@ bool playerTestBeingHit(int base_to_hit, int level, int plus_to_hit, int armor_c
 }
 
 // Decreases players hit points and sets game.character_is_dead flag if necessary -RAK-
-void playerTakesHit(int damage, const char *creature_name_label, const std::optional<Coord_t> &damageSourceCoord) {
+void playerTakesHit(int damage, const char *creature_name_label, const std::optional<Coord_t> &damageSourceCoord, const std::optional<uint8_t> &attackedBodyPart) {
     if (py.flags.invulnerability > 0) {
         damage = 0;
     }
+
+    // See if the player is prepared for attacks on this body part.
+    int iDamageBlocked = 0;
+    bool bBlockedAttack = false;
+    if (attackedBodyPart.has_value() && py.misc.stance == *attackedBodyPart) {
+        static_assert(PLAYER_DAMAGE_PERCENT_STANCE < 100, "this value should be smaller than 100");
+        const auto damagePortionToBlock = static_cast<float>(PLAYER_DAMAGE_PERCENT_STANCE) / 100.0F;
+
+        iDamageBlocked = std::round(static_cast<float>(damage) * damagePortionToBlock);
+        damage -= iDamageBlocked;
+        if (damage < 0) {
+            damage = 0;
+        }
+        bBlockedAttack = true;
+    }
+
     py.misc.current_hp -= damage;
 
-    if (damage > 0 && py.misc.current_hp > 0) {
+    if (py.misc.current_hp > 0 && (damage > 0 || iDamageBlocked > 0)) {
         // Show a flying message.
         // Make the message move up by default, for example for starvation/poison/etc effects.
         int iMessageHorizontalDirection = 0;
@@ -659,9 +676,25 @@ void playerTakesHit(int damage, const char *creature_name_label, const std::opti
             iMessageVerticalDirection = std::clamp(py.pos.y - damageSourceCoord->y, -1, 1);
         }
 
+        // Prepare message color and additional text to display.
+        int iMessageColor = Color_Message_Hit;
+        std::string sAdditionalText;
+        if (bBlockedAttack) {
+            iMessageColor = Color_Light_Grey_Low;
+            sAdditionalText = " (blocked " + std::to_string(iDamageBlocked) + ")";
+        }
+
         // Create a new message.
         game.vFlyingMessages.push_back(
-            FlyingMessage::create("-" + std::to_string(damage), py.pos.x, py.pos.y, iMessageHorizontalDirection, iMessageVerticalDirection, Color_Message_Hit));
+            FlyingMessage::create("-" + std::to_string(damage) + sAdditionalText, py.pos.x, py.pos.y, iMessageHorizontalDirection, iMessageVerticalDirection, iMessageColor));
+    }
+
+    game.iHitsTakenWithoutChangingStance += 1;
+    if (game.iHitsTakenWithoutChangingStance == REMIND_ABOUT_STANCES_HIT_COUNT) {
+        printMessage("Did you know you can change which body part you protect?");
+        printMessage("Use CTRL+8 / CTRL+5 / CTRL+2 to change which body part you protect.");
+        printMessage("If a monster attacks in the protected body part some part of ");
+        printMessage("the incoming damage will be blocked.");
     }
 
     // Update armor condition.
@@ -1792,4 +1825,18 @@ char *playerRankTitle() {
     }
 
     return (char *) p;
+}
+
+int getPlayerColor() {
+    if (py.misc.stance == PLAYER_STANCE_HEAD) {
+        return Color_Prepare_Defend_Head;
+    }
+    if (py.misc.stance == PLAYER_STANCE_LEGS) {
+        return Color_Prepare_Defend_Legs;
+    }
+    if (py.misc.stance == PLAYER_STANCE_TORSO) {
+        return Color_Prepare_Defend_Torso;
+    }
+
+    return Color_White;
 }

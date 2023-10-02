@@ -1554,11 +1554,14 @@ static bool executeAttackOnPlayer(uint8_t creature_level, int16_t &monster_hp, i
 
     Monster_t &monster = monsters[monster_id];
 
+    // Generate a random body part to attack.
+    const auto targetBodyPartToAttack = randomNumber(PLAYER_STANCE_HEAD + 1) - 1;
+
     switch (attack_type) {
         case 1: // Normal attack
             // round half-way case down
             damage -= ((py.misc.ac + py.misc.magical_ac) * damage) / 200;
-            playerTakesHit(damage, death_description, monster.pos);
+            playerTakesHit(damage, death_description, monster.pos, targetBodyPartToAttack);
             break;
         case 2: // Lose Strength
             playerTakesHit(damage, death_description, monster.pos);

@@ -527,7 +527,7 @@ void playerMove(int direction, bool do_pickup) {
                     // Attempt to open closed door when you walk into it -ATW-
                     openClosedDoor(coord);
                     free_turn = false;
-                    //printMessage("There is a closed door blocking your way.");
+                    // printMessage("There is a closed door blocking your way.");
                 }
             } else {
                 playerEndRunning();
@@ -549,4 +549,7 @@ void playerMove(int direction, bool do_pickup) {
             playerAttackPosition(coord);
         }
     }
+
+    // Update color.
+    panelPutTile('@', getPlayerColor(), py.pos);
 }

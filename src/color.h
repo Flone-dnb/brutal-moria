@@ -276,4 +276,9 @@ typedef struct {
 #define Color_Message_Hit Color_Red
 #define Color_Message_Miss Color_Medium_Grey_High
 
+/* Player stances. */
+#define Color_Prepare_Defend_Head Color_Light_Purple
+#define Color_Prepare_Defend_Torso Color_White
+#define Color_Prepare_Defend_Legs Color_Light_Blue
+
 #define Color_Default Color_White

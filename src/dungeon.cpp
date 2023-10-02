@@ -592,7 +592,7 @@ static void sub3MoveLight(Coord_t const &from, Coord_t const &to) {
     }
 
     if ((py.running_tracker == 0) || config::options::run_print_self) {
-        panelPutTile('@', Color_White, to);
+        panelPutTile('@', getPlayerColor(), to);
     }
 }
 

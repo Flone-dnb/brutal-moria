@@ -15,6 +15,7 @@ This fork brings the following changes:
     - Your inventory/equipment/gold weight now affects how fast you feel hunger.
     - Monsters spawn x2 times more often.
     - Dungeon now has x2 more items.
+    - Use CTRL+8 / CTRL+5 / CTRL+2 to change which body part you protect, if a monster attacks in the protected body part some part of the incoming damage will be blocked.
     - Condition of the armor your character is wearing will now degrade when you take a hit and at some point your armor will break into pieces and disappear. Armor condition is displayed in its description.
 - Items
     - Light items (Torch, Lantern, Flask of Oil) are now more expensive and have less "capacity" (turns).

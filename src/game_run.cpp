@@ -1405,6 +1405,10 @@ static char originalCommands(char command) {
         case CTRL_KEY('U'): // ^U = summon
             command = '&';
             break;
+        case 127: // CTRL+8
+        case 0:   // CTRL+2
+        case 29:  // CTRL+5
+            break;
         default:
             command = '~'; // Anything illegal.
             break;
@@ -1969,6 +1973,27 @@ static void doCommand(char command) {
         case 'X': // e(X)change weapons  e(x)change
             inventoryExecuteCommand('x');
             break;
+        case 127: // CTRL+8
+            py.misc.stance = PLAYER_STANCE_HEAD;
+            panelPutTile('@', getPlayerColor(), py.pos);
+            printMessage("You prepare to defend from attacks targeted at your head.");
+            game.iHitsTakenWithoutChangingStance = 0;
+            game.player_free_turn = true;
+            break;
+        case 0: // CTRL+2
+            py.misc.stance = PLAYER_STANCE_LEGS;
+            panelPutTile('@', getPlayerColor(), py.pos);
+            printMessage("You prepare to defend from attacks targeted at your legs.");
+            game.iHitsTakenWithoutChangingStance = 0;
+            game.player_free_turn = true;
+            break;
+        case 29: // CTRL+5
+            py.misc.stance = PLAYER_STANCE_TORSO;
+            panelPutTile('@', getPlayerColor(), py.pos);
+            printMessage("You prepare to defend from attacks targeted at your torso.");
+            game.iHitsTakenWithoutChangingStance = 0;
+            game.player_free_turn = true;
+            break;
         default:
             // Wizard commands are free moves
             game.player_free_turn = true;
@@ -2067,6 +2092,9 @@ static bool validCountCommand(char command) {
         case CTRL_KEY('D'):
         case CTRL_KEY('G'):
         case '+':
+        case 127: // CTRL+8
+        case 29:  // CTRL+5
+        case 0:   // CTRL+2
             return true;
         default:
             return false;
@@ -2403,6 +2431,9 @@ static void playDungeon() {
     // Note: yes, this last input command needs to be persisted
     // over different iterations of the main loop below -MRC-
     char last_input_command = {0};
+
+    // Update color.
+    panelPutTile('@', getPlayerColor(), py.pos);
 
     // Loop until dead,  or new level
     // Exit when `dg.generate_new_level` and `eof_flag` are both set

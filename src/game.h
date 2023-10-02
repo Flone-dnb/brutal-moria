@@ -30,6 +30,9 @@ constexpr uint8_t NORMAL_TABLE_SD = 64; // the standard deviation for the table
 /** Time after which a flying message should be updated. */
 constexpr long FLYING_MESSAGE_UPDATE_INTERVAL_MS = 100;
 
+/** Remind the player about "stances" feature after receiving N hits while not changing stance. */
+constexpr size_t REMIND_ABOUT_STANCES_HIT_COUNT = 30;
+
 // Inventory command screen states.
 enum class Screen {
     Blank = 0,
@@ -148,6 +151,9 @@ typedef struct Game_t {
     char doing_inventory_command = 0; // Track inventory commands -CJS-
     char last_command = ' ';          // Save of the previous player command
     int command_count = 0;            // How many times to repeat a specific command -CJS-
+
+    /** How much hits player received without changing his stance (because the player maybe forgot about this feature). */
+    size_t iHitsTakenWithoutChangingStance = 0;
 
     vtype_t character_died_from = {'\0'}; // What the character died from: starvation, Bat, etc.
 
