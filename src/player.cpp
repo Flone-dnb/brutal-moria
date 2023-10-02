@@ -1263,7 +1263,11 @@ static void playerAttackMonster(Coord_t coord) {
     unsigned int iHitCount = 0;
     int iDamageSum = 0;
     const auto monsterPos = monster.pos; // in case it dies
-    const auto displayHitMiss = [&](bool bMonsterDead) {
+    const auto processHitMiss = [&](bool bMonsterDead) {
+        // Apply vampirism.
+        const auto iHealthToRestore = static_cast<int16_t>(std::round(static_cast<float>(iDamageSum) * PLAYER_VAMPIRISM_PORTION));
+        py.misc.current_hp = std::min(static_cast<int16_t>(py.misc.current_hp + iHealthToRestore), py.misc.max_hp);
+
         // Prepare miss/hit count text.
         std::string sHitDamageText = "-" + std::to_string(iDamageSum);
         std::string sHitCountText;
@@ -1290,6 +1294,11 @@ static void playerAttackMonster(Coord_t coord) {
             // Create a new message.
             game.vFlyingMessages.push_back(
                 FlyingMessage::create("miss" + sMissCountText, monsterPos.x, monsterPos.y, iMessageHorizontalDirection, iMessageVerticalDirection, Color_Message_Miss));
+        }
+
+        if (iHealthToRestore > 0) {
+            // Create a new message.
+            game.vFlyingMessages.push_back(FlyingMessage::create("heal " + std::to_string(iHealthToRestore), py.pos.x, py.pos.y - 1, 0, -1, Color_Green));
         }
 
         if (bMonsterDead) {
@@ -1364,7 +1373,7 @@ static void playerAttackMonster(Coord_t coord) {
             printMessage(msg);
             displayCharacterExperience();
 
-            displayHitMiss(true);
+            processHitMiss(true);
 
             return;
         }
@@ -1384,7 +1393,7 @@ static void playerAttackMonster(Coord_t coord) {
         }
     }
 
-    displayHitMiss(false);
+    processHitMiss(false);
 }
 
 static int16_t playerLockPickingSkill() {

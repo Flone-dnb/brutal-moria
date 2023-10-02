@@ -8,6 +8,7 @@
 #include "headers.h"
 
 #include <algorithm>
+#include <cmath>
 
 static void playDungeon();
 
@@ -2461,7 +2462,8 @@ static void playDungeon() {
         playerUpdateHeroStatus();
 
         int regen_amount = playerFoodConsumption();
-        playerUpdateRegeneration(regen_amount);
+        // Make regeneration slower in favor of vampirism.
+        playerUpdateRegeneration(std::max(0, static_cast<int>(std::round(static_cast<float>(regen_amount) * 0.1F))));
 
         playerUpdateBlindness();
         playerUpdateConfusion();

@@ -48,6 +48,9 @@ constexpr uint8_t PLAYER_STANCE_LEGS = 0;
 /** How much damage (percent) to remove from incoming damage if the attack is targeting protected body part. */
 constexpr uint8_t PLAYER_DAMAGE_PERCENT_STANCE = 30;
 
+/** How much damage will be converted to health. */
+constexpr float PLAYER_VAMPIRISM_PORTION = 0.2F;
+
 // ClassRankTitle_t of the player: Novice, Mage (5th), Paladin, etc.
 // Currently only used by the `playerRankTitle()` function.
 // TODO: perhaps use a plain std::string instead?
