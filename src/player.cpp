@@ -1267,6 +1267,7 @@ static void playerAttackMonster(Coord_t coord) {
         // Apply vampirism.
         const auto iHealthToRestore = static_cast<int16_t>(std::round(static_cast<float>(iDamageSum) * PLAYER_VAMPIRISM_PORTION));
         py.misc.current_hp = std::min(static_cast<int16_t>(py.misc.current_hp + iHealthToRestore), py.misc.max_hp);
+        printCharacterCurrentHitPoints();
 
         // Prepare miss/hit count text.
         std::string sHitDamageText = "-" + std::to_string(iDamageSum);
