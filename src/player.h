@@ -98,6 +98,7 @@ typedef struct Player_t {
         int16_t current_hp;                   // Current hit points
         uint16_t current_hp_fraction;         // Current hit points fraction * 2^16
         uint8_t stance = PLAYER_STANCE_TORSO; // `1` for "prepared to block attack on torso", `2` for head and `0` for legs
+        uint8_t consecutive_block_count = 0;  // how much times player blocked attack consecutively
         char history[4][60];                  // History record
     } misc{};
 

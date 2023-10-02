@@ -15,7 +15,7 @@ This fork brings the following changes:
     - Your inventory/equipment/gold weight now affects how fast you feel hunger.
     - Monsters spawn x2 times more often.
     - Dungeon now has x2 more items.
-    - Use CTRL+8 / CTRL+5 / CTRL+2 to change which body part you protect, if a monster attacks in the protected body part some part of the incoming damage will be blocked.
+    - Use CTRL+8 / CTRL+5 / CTRL+2 to change which body part you protect, if a monster attacks in the protected body part 30% of the incoming damage will be blocked, if you will also block the next attack you will block 60% and then 90% (for 3 consecutive blocks, more consecutive blocks will be clamped at 90%).
     - HP regeneration is now 10 times slower but you when you deal damage 20% of that damage will be converted to HP that you will restore.
     - Condition of the armor your character is wearing will now degrade when you take a hit and at some point your armor will break into pieces and disappear. Armor condition is displayed in its description.
 - Items

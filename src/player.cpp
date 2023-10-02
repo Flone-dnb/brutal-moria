@@ -651,8 +651,14 @@ void playerTakesHit(int damage, const char *creature_name_label, const std::opti
     int iDamageBlocked = 0;
     bool bBlockedAttack = false;
     if (attackedBodyPart.has_value() && py.misc.stance == *attackedBodyPart) {
-        static_assert(PLAYER_DAMAGE_PERCENT_STANCE < 100, "this value should be smaller than 100");
-        const auto damagePortionToBlock = static_cast<float>(PLAYER_DAMAGE_PERCENT_STANCE) / 100.0F;
+        // because we multiply it at max to 3 below
+        static_assert(PLAYER_DAMAGE_PERCENT_STANCE < 33, "this value should be smaller than 33");
+
+        // Increase block count.
+        py.misc.consecutive_block_count += 1;
+
+        // Calculate damage.
+        const auto damagePortionToBlock = static_cast<float>(PLAYER_DAMAGE_PERCENT_STANCE * std::clamp(static_cast<int>(py.misc.consecutive_block_count), 1, 3)) / 100.0F;
 
         iDamageBlocked = std::round(static_cast<float>(damage) * damagePortionToBlock);
         damage -= iDamageBlocked;
@@ -660,6 +666,8 @@ void playerTakesHit(int damage, const char *creature_name_label, const std::opti
             damage = 0;
         }
         bBlockedAttack = true;
+    } else {
+        py.misc.consecutive_block_count = 0;
     }
 
     py.misc.current_hp -= damage;
