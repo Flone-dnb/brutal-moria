@@ -119,12 +119,6 @@ struct FlyingMessage {
      * @return `true` if message can still be displayed, `false` if the message can no longer be displayed.
      */
     bool adjustMessageToScreenBounds();
-
-    /**
-     * `true` if when last time we displayed the message at least 1 character of the message was displayed
-     * on screen, `false` if not.
-     */
-    bool bMessageFitInScreenLastUpdate = false;
 };
 
 typedef struct Game_t {

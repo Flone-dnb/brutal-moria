@@ -381,10 +381,7 @@ bool FlyingMessage::update() {
 
     // Adjust message to screen bounds.
     if (!adjustMessageToScreenBounds()) {
-        bMessageFitInScreenLastUpdate = false;
         return false;
-    } else {
-        bMessageFitInScreenLastUpdate = true;
     }
 
     // Display.
@@ -400,8 +397,9 @@ bool FlyingMessage::update() {
 }
 
 void FlyingMessage::clearMessageFromScreen() {
-    // Don't touch screen if current coordinates were out of bounds.
-    if (!bMessageFitInScreenLastUpdate) {
+    // Don't touch screen if current coordinates were out of bounds
+    // (re-adjust the message include possibly changed dungeon bounds).
+    if (!adjustMessageToScreenBounds()) {
         return;
     }
 
