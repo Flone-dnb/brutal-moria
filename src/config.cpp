@@ -76,8 +76,8 @@ namespace config {
             const uint8_t MAX_GOLD_TYPES = 18; // Number of different types of gold
             const uint8_t MAX_TRAPS = 18;      // Number of defined traps
 
-            const uint8_t LEVEL_OBJECTS_PER_ROOM = 9;     // Amount of objects for rooms
-            const uint8_t LEVEL_OBJECTS_PER_CORRIDOR = 3; // Amount of objects for corridors
+            const uint8_t LEVEL_OBJECTS_PER_ROOM = 14;     // Amount of objects for rooms
+            const uint8_t LEVEL_OBJECTS_PER_CORRIDOR = 4; // Amount of objects for corridors
             const uint8_t LEVEL_TOTAL_GOLD_AND_GEMS = 2;  // Amount of gold (and gems)
         } // namespace objects
     } // namespace dungeon
@@ -154,7 +154,7 @@ namespace config {
     } // namespace treasure
 
     namespace monsters {
-        const uint8_t MON_CHANCE_OF_NEW = 120;            // 1/x chance of new monster each round
+        const uint8_t MON_CHANCE_OF_NEW = 80;             // 1/x chance of new monster each round
         const uint8_t MON_MAX_SIGHT = 20;                 // Maximum dis a creature can be seen
         const uint8_t MON_MAX_SPELL_CAST_DISTANCE = 20;   // Maximum dis creature spell can be cast
         const uint8_t MON_MAX_MULTIPLY_PER_LEVEL = 75;    // Maximum reproductions on a level

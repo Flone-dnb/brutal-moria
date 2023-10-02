@@ -13,8 +13,8 @@ This fork brings the following changes:
     - When your character hits a creature or a creature hits your character a "flying" message will appear in the direction of the attack with the text of the damage dealt just like in Cataclysm: Dark Days Ahead.
 - Gameplay
     - Your inventory/equipment/gold weight now affects how fast you feel hunger.
-    - Monsters spawn ~30% more often.
-    - Dungeon now has ~30% more items.
+    - Monsters spawn x2 times more often.
+    - Dungeon now has x2 more items.
     - Condition of the armor your character is wearing will now degrade when you take a hit and at some point your armor will break into pieces and disappear. Armor condition is displayed in its description.
 - Items
     - Light items (Torch, Lantern, Flask of Oil) are now more expensive and have less "capacity" (turns).
