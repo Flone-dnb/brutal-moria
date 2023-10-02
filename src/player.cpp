@@ -1298,7 +1298,7 @@ static void playerAttackMonster(Coord_t coord) {
 
         if (iHealthToRestore > 0) {
             // Create a new message.
-            game.vFlyingMessages.push_back(FlyingMessage::create("heal " + std::to_string(iHealthToRestore), py.pos.x, py.pos.y - 1, 0, -1, Color_Green));
+            game.vFlyingMessages.push_back(FlyingMessage::create("heal " + std::to_string(iHealthToRestore), py.pos.x, py.pos.y + 1, 0, -1, Color_Green));
         }
 
         if (bMonsterDead) {
