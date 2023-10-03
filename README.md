@@ -39,22 +39,22 @@ Supported Platforms:
 
   - Windows
   - macOS
-  - Linux (Ubuntu/Debian)
+  - Linux
 
 Compiling and limited testing has been done for other Linux based system
 including NetBSD 8.1 and Fedora 32.
 
-## Umoria Color
+# Umoria Color
 
 Colour-Umoria was a patch originally written in 1993 by Edouard Poor. In 2020
 it was ported by Andrew Weber as a fork of the modernized Umoria restoration
 release.
 
-## Notes on Compiling Umoria
+# Compiling Umoria
 
 You will need `ncurses` as well as `CMake` and the C++ build tools for your system.
 
-### macOS and Linux
+## macOS and Linux
 
 Change to the `umoria` game directory and enter the following commands at the
 terminal:
@@ -69,7 +69,38 @@ An `umoria` directory will be created in the current directory containing the
 game binary and data files, which can then be moved to any other location, such
 as the `home` directory.
 
-### Windows
+## Windows
+
+Note
+> Playability on Windows is rarely tested (Windows is not very well supported).
+
+There are at least 2 ways to compile this project on Windows:
+
+### Using Windows Subsystem for Linux (WSL)
+
+In your Windows search bar type `Windows Features` and open up the resulting application. Inside of the opened window check (turn on) `Windows Subsystem for Linux` option and click `OK` (you may be asked to restart your system).
+
+In your Windows search bar type `Microsoft Store` to open up the Microsoft Store app, inside of the Microsoft store search for `Ubuntu` and download/install it. Then after installation in your Windows search bar type `Ubuntu` and open that app (this will open up a terminal). Inside of Ubuntu's terminal use the following commands to prepare for compilation:
+
+```
+sudo apt update && sudo apt upgrade
+sudo apt install libncurses5-dev libncursesw5-dev cmake build-essential
+```
+
+Then do the usual (clone repository and build):
+
+```
+git clone <address of this repository>
+cd <cloned repository name>
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make
+cd umoria
+./umoria
+```
+
+### Using MSYS2
 
 MinGW is used to provide GCC and GNU Binutils for compiling on the Windows platform.
 The easiest solution to get set up is to use the [MSYS2 Installer](http://msys2.github.io/).
@@ -94,7 +125,7 @@ To perform an out-of-source build, type the following:
 
 As with the macOS/Linux builds, all files will be installed into an `umoria` directory.
 
-## Historical Documents
+# Historical Documents
 
 Most of the original document files included in the Umoria 5.6 sources have
 been placed in the [historical](historical) directory. You will even find the
@@ -106,7 +137,7 @@ There is also the original Moria Manual and FAQ. Although these are a little
 outdated now they are certainly worth reading as they contain a lot of
 interesting and useful information.
 
-## License Information
+# License Information
 
 Umoria is released under the [GNU General Public License v3.0](LICENSE).
 
