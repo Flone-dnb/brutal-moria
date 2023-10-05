@@ -91,6 +91,7 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 cmake --build . --config=Release
 cd umoria
+move .\Release\umoria.exe umorial.exe
 umoria.exe
 ```
 
