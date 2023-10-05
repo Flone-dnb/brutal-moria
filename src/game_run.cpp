@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <cmath>
 
+#undef max
+
 static void playDungeon();
 
 static void initializeCharacterInventory();

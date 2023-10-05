@@ -5,9 +5,7 @@ if (${CMAKE_SOURCE_DIR} STREQUAL "${PROJECT_SOURCE_DIR}/src")
     message(FATAL_ERROR "CMake generation is not allowed within the source directory!")
 endif ()
 
-project(umoria
-    LANGUAGES CXX
-)
+project(umoria)
 
 #
 # Set a default build type
@@ -26,50 +24,10 @@ endif ()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
-#
-# Core set of warnings
-#
-set(cxx_warnings "-Wall")
-set(cxx_warnings "${cxx_warnings} -Wextra")
-set(cxx_warnings "${cxx_warnings} -Wpedantic")
-set(cxx_warnings "${cxx_warnings} -Wshadow")
-#set(cxx_warnings "${cxx_warnings} -Werror")
-set(cxx_warnings "${cxx_warnings} -pedantic-errors")
-set(cxx_warnings "${cxx_warnings} -Weffc++ ")
-
-# Additional warnings
-set(cxx_warnings "${cxx_warnings} -Wcast-align")
-set(cxx_warnings "${cxx_warnings} -Wdisabled-optimization")
-set(cxx_warnings "${cxx_warnings} -Wfloat-equal")
-set(cxx_warnings "${cxx_warnings} -Winline")
-set(cxx_warnings "${cxx_warnings} -Winvalid-pch")
-set(cxx_warnings "${cxx_warnings} -Wmissing-format-attribute")
-set(cxx_warnings "${cxx_warnings} -Wmissing-include-dirs")
-set(cxx_warnings "${cxx_warnings} -Wpacked")
-set(cxx_warnings "${cxx_warnings} -Wredundant-decls")
-set(cxx_warnings "${cxx_warnings} -Wswitch-default")
-set(cxx_warnings "${cxx_warnings} -Wswitch-enum")
-set(cxx_warnings "${cxx_warnings} -Wunreachable-code")
-set(cxx_warnings "${cxx_warnings} -Wwrite-strings")
-
-# Some very strict warnings, that will be nice to use, but require some hefty refactoring
-# set(cxx_warnings "${cxx_warnings} -Wcast-qual")
-# set(cxx_warnings "${cxx_warnings} -Wconversion")
-# set(cxx_warnings "${cxx_warnings} -Wformat=2")
-# set(cxx_warnings "${cxx_warnings} -Wpadded")
-# set(cxx_warnings "${cxx_warnings} -Wstrict-overflow")
-# set(cxx_warnings "${cxx_warnings} -fno-strict-aliasing")
-
 # Temporary support for GCC 8.
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(cxx_warnings "${cxx_warnings} -Wno-format-overflow")
 endif()
-
-#
-# Set the flags and warnings for the debug/release builds
-#
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -O0 ${cxx_warnings}")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 ${cxx_warnings}")
 
 
 #
@@ -239,6 +197,14 @@ set(resources ${data_files} ${support_files})
 # Also add resources to the target so they are visible in the IDE
 add_executable(umoria ${source_files} ${resources})
 
+#
+# Core set of warnings
+#
+if(MSVC)
+   target_compile_options(${PROJECT_NAME} PUBLIC /W3)
+else()
+   target_compile_options(${PROJECT_NAME} PUBLIC -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable)
+endif()
 
 #
 # Get around the fact that Visual Studio doesn't have ssize_t
@@ -251,7 +217,18 @@ endif(MSVC)
 # This is horrible, but needed bacause `find_package()` doesn't use the
 # include/lib inside the /mingw32 or /mingw64 directories, and with
 # `ncurses-devel` installed, it won't compile.
-if ((MSYS OR MINGW) AND "$ENV{MINGW}" STREQUAL "")
+if(WIN32 OR MSVC)
+    # Add PDCurses library and use it instead of curses.
+    file(GLOB PDCURSES_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/ext/PDCurses/pdcurses/*.c)
+    file(GLOB PDCURSES_WINDOWS_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/ext/PDCurses/wincon/*.c)
+    add_library(PDcurses STATIC
+        ${PDCURSES_SOURCES}
+        ${PDCURSES_WINDOWS_SOURCES}
+        ${CMAKE_CURRENT_SOURCE_DIR}/ext/PDCurses/wincon/pdcwin.h
+    )
+    target_include_directories(PDcurses PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/ext/PDCurses/)
+    target_link_libraries(umoria PRIVATE PDcurses)
+elseif ((MSYS OR MINGW) AND "$ENV{MINGW}" STREQUAL "")
     message(FATAL_ERROR "You must set the MINGW environment variable ('mingw64' or 'mingw32'). Example: MINGW=mingw64 cmake .")
     message(FATAL_ERROR "This will be the directory used for locating the ncurses library files.")
 elseif ((MSYS OR MINGW) AND NOT "$ENV{MINGW}" STREQUAL "")

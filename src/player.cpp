@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <cmath>
 
+#undef min
+
 // Player record for most player related info
 Player_t py = Player_t{};
 
@@ -660,7 +662,7 @@ void playerTakesHit(int damage, const char *creature_name_label, const std::opti
         // Calculate damage.
         const auto damagePortionToBlock = static_cast<float>(PLAYER_DAMAGE_PERCENT_STANCE * std::clamp(static_cast<int>(py.misc.consecutive_block_count), 1, 3)) / 100.0F;
 
-        iDamageBlocked = std::round(static_cast<float>(damage) * damagePortionToBlock);
+        iDamageBlocked = static_cast<int>(std::round(static_cast<float>(damage) * damagePortionToBlock));
         damage -= iDamageBlocked;
         if (damage < 0) {
             damage = 0;

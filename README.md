@@ -71,10 +71,28 @@ as the `home` directory.
 
 ## Windows
 
-Note
-> Playability on Windows is rarely tested (Windows is not very well supported).
+There are at least 3 ways to compile this project on Windows:
 
-There are at least 2 ways to compile this project on Windows:
+### Using PDCurses
+
+First, clone this repository, then update submodules to pull PDCurses repository:
+
+```
+git submodule update --init --recursive
+```
+
+then build as usual:
+
+```
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build . --config=Release
+cd umoria
+umoria.exe
+```
+
+You can change UI scaling by changing your console's font.
 
 ### Using Windows Subsystem for Linux (WSL)
 

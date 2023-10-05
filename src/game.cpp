@@ -353,10 +353,10 @@ std::unique_ptr<FlyingMessage> FlyingMessage::create(const std::string &sMessage
     // See if we should move to the left.
     if (iHorizontalDirection < 0) {
         // Adjust initial start position to include message length.
-        iCurrentHorizontalPosition -= sMessage.size();
+        iCurrentHorizontalPosition -= static_cast<int>(sMessage.size());
     } else if (iVerticalDirection != 0) {
         // Adjust initial start position to be centered.
-        iCurrentHorizontalPosition -= sMessage.size() / 2;
+        iCurrentHorizontalPosition -= static_cast<int>(sMessage.size() / 2);
     }
 
     // Create a new message.
@@ -407,7 +407,7 @@ void FlyingMessage::clearMessageFromScreen() {
     for (size_t i = 0; i < sMessage.size(); i++) {
         Coord_t location;
         location.y = iCurrentVerticalPosition;
-        location.x = iCurrentHorizontalPosition + i;
+        location.x = static_cast<int>(iCurrentHorizontalPosition + i);
         panelPutTile(caveGetTileSymbol(location), caveGetTileColor(location), location);
     }
 
@@ -455,7 +455,7 @@ bool FlyingMessage::adjustMessageToScreenBounds() {
             return false;
         }
         sMessage = sMessage.substr(0, sMessage.size() - iCharacterToEraseCount);
-        iCurrentHorizontalPosition += iCharacterToEraseCount + 1;
+        iCurrentHorizontalPosition += static_cast<int>(iCharacterToEraseCount + 1);
     }
 
     // Check up/down bounds.
