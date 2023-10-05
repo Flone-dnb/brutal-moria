@@ -701,10 +701,14 @@ void playerTakesHit(int damage, const char *creature_name_label, const std::opti
 
     game.iHitsTakenWithoutChangingStance += 1;
     if (game.iHitsTakenWithoutChangingStance == REMIND_ABOUT_STANCES_HIT_COUNT) {
+#if !defined(WIN32)
+        // TODO: CTRL+NUM do not work on Windows.
         printMessage("Did you know you can change which body part you protect?");
         printMessage("Use CTRL+8 / CTRL+5 / CTRL+2 to change which body part you protect.");
         printMessage("If a monster attacks in the protected body part some part of ");
         printMessage("the incoming damage will be blocked.");
+#endif
+        game.iHitsTakenWithoutChangingStance = 0; // notified the user, reset the counter
     }
 
     // Update armor condition.
