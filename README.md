@@ -1,5 +1,7 @@
 # Fork info
 
+![](screenshot.png?raw=true)
+
 This fork brings the following changes:
 - UI
     - Make visuals more colorful.
